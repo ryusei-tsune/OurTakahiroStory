@@ -1,0 +1,8 @@
+FROM node:16.15-alpine
+
+WORKDIR /home/node/app
+
+RUN npm install -g npm@8.12.1
+
+RUN npm config set unsafe-perm true
+CMD npm run dev

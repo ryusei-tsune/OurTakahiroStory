@@ -1,0 +1,34 @@
+{
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.packageManager": "npm",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "[sass]": {
+    "editor.defaultFormatter": "syler.sass-indented"
+  },
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "editor.rulers": [
+    120
+  ],
+  "[vue]": {
+    "editor.defaultFormatter": "octref.vetur"
+  }
+}
