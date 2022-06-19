@@ -12,7 +12,7 @@
 
     <div class="flex flex-row justify-center items-center space-x-5 w-full">
       <button
-        v-if="this.isGoal"
+        v-if="isGoal"
         class="
           bg-yellow-500
           hover:bg-yellow-400
@@ -72,22 +72,7 @@
 </template>
 <script>
 export default {
-  head() {
-    return {
-      script: [
-        {
-          // TODO:apikey必要
-          src: 'https://maps.googleapis.com/maps/api/js?key=',
-          defer: true,
-          callback: () => {
-            console.log('google map api loaded')
-            this.setStreetView(this.checkpoint_count)
-          },
-        },
-      ],
-      title: '回してご飯',
-    }
-  },
+  head() {},
   layout: 'default',
   components: {},
   middleware: [],
@@ -119,17 +104,23 @@ export default {
       },
     },
   },
-  computed: {},
+  computed: {
+    google() {
+      return window.google
+    },
+  },
   created() {},
   beforeMount() {},
   mounted() {
-    this.init()
-    this.checkpoint_count = this.coordinates.length
     //TODO:ここであっきーの関数でcoordinatesに値代入する
+    this.init()
   },
   beforeDestroy() {},
   methods: {
     init() {
+      //初期ストリートビュー準備
+      this.checkpoint_count = this.coordinates.length
+      this.setStreetView(this.checkpoint_count)
       //現在地習得
       navigator.geolocation.watchPosition(
         (position) => {
@@ -155,6 +146,7 @@ export default {
       //座標リストからstreetviewセットする。
       var coord_index = checkpoint_count - 1
       const fenway = this.coordinates[coord_index]
+      const google = this.google
       const map = new google.maps.Map(document.getElementById('gmap'), {
         center: fenway,
         zoom: 14,
