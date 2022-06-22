@@ -14,7 +14,9 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
+
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [{ src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
