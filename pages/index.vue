@@ -1,15 +1,21 @@
 <template>
   <div>
-    Test
-    <h1>Test</h1>
-    <!-- h1タグの文字も大きくならない(タグなしと同じになる) -->
-    <h1 class="text-3xl font-bold underline">Tailwind CSS aa</h1>
-    <Tutorial />
+    <div class="flex justify-center">Test</div>
+    <div class="flex justify-center">
+      <!-- h1タグの文字も大きくならない(タグなしと同じになる) -->
+      <h1>Test</h1>
+    </div>
+    <div class="flex justify-center">
+      <h1 class="text-3xl font-bold underline">Tailwind CSS aa</h1>
+    </div>
+    <div class="flex justify-center">
+      <div id="map"></div>
+    </div>
   </div>
 </template>
 
 <script>
-import Tutorial from '~/components/Tutorial.vue'
+import { Loader } from 'google-maps'
 export default {
   head() {
     return {
@@ -17,19 +23,41 @@ export default {
     }
   },
   layout: 'default',
-  components: {
-    Tutorial,
-  },
+  components: {},
   middleware: [],
   data() {
-    return {}
+    return {
+      map: null,
+    }
   },
   watch: {},
   computed: {},
   created() {},
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    this.getGoogleMap()
+  },
   beforeDestroy() {},
-  methods: {},
+  methods: {
+    async getGoogleMap() {
+      const loader = new Loader(this.$config.apiKey)
+      const google = await loader.load()
+
+      // templateの<div ref="map">に地図を表示
+      this.map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: 35.6809591, lng: 139.7673068 }, // 東京駅
+        zoom: 15,
+        streetViewControl: false,
+        mapTypeControl: false,
+        fullscreenControl: false,
+      })
+    },
+  },
 }
 </script>
+<style scoped>
+#map {
+  width: 400px;
+  height: 300px;
+}
+</style>
