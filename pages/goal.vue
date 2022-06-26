@@ -1,6 +1,6 @@
 <template>
   <div>
-    テンプレート
+    <div class="destination">{{ name }}</div>
     <div class="bg" :style="{ height: imgHeight }" />
     <div class="capsule"></div>
   </div>
@@ -18,6 +18,7 @@ export default {
   data() {
     return {
       innerHeight: window.innerHeight,
+      name: '',
     }
   },
   watch: {},
@@ -30,6 +31,7 @@ export default {
   beforeMount() {},
   mounted() {
     window.addEventListener('resize', this.windowResize)
+    this.name = this.$store.state.name
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.windowResize)
@@ -43,11 +45,20 @@ export default {
 </script>
 <style>
 body {
-  background-color: aquamarine;
+  background-color: rgb(100, 170, 180);
 }
 </style>
 <style scoped>
+.destination {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  font-size: 8vmin;
+  font-weight: bold;
+}
 .bg {
+  position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
@@ -69,14 +80,14 @@ body {
   }
   10% {
     opacity: 0.9;
-    transform: scale(1);
+    transform: scale(0.9);
   }
   70% {
     opacity: 0.9;
   }
   100% {
     opacity: 1;
-    transform: scale(1.15);
+    transform: scale(1);
   }
 }
 .capsule {
@@ -84,7 +95,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, 20%);
-  background-image: url('/capsule.png');
+  background-image: url('/capsule-open.png');
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: center;
