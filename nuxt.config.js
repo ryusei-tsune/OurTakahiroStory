@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'sample',
+    title: '回してごはん',
     htmlAttrs: {
       lang: 'en',
     },
@@ -16,6 +16,12 @@ export default {
     ],
 
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0',
+      },
+    ],
     script: [{ src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` }],
   },
 
@@ -23,7 +29,7 @@ export default {
   css: ['@/assets/css/main.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [{ src: '~/plugins/persistedState.js', ssr: false }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: false,
