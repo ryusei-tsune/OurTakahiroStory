@@ -47,3 +47,20 @@ $ docker-compose exec node sh
 # Docker サービスを終了する
 $ docker-compose down
 ```
+
+<br>
+<br>
+
+## 補足
+
+### https サーバのための一時的な ssl 証明書の作り方
+
+デバイスのジャイロを習得するときに https が必須。
+
+```
+openssl req -x509 -newkey rsa:4096 -sha256 \
+-nodes -keyout static/ssl_cert/https_server.key.pem \
+-out static/ssl_cert/https_server.cert.pem
+```
+
+作成後は[二回目以降](#二回目以降)と同じ
