@@ -10,7 +10,7 @@
       <div class="h-0 w-0" id="gmap"></div>
       <div class="h-[40vh] w-10/12" id="gpano"></div>
     </div>
-    <compus v-bind:target_deg="this.angle_to_ckpt" />
+    <Compus v-bind:target_deg="this.angle_to_ckpt" />
 
     <div class="flex flex-row justify-center items-center space-x-5 w-full">
       <button
@@ -71,11 +71,11 @@
   </div>
 </template>
 <script>
-import compus from './compus.vue'
+import Compus from '~/components/Compus.vue'
 export default {
   head() {},
   layout: 'default',
-  components: { compus },
+  components: { Compus },
   middleware: [],
   data() {
     return {
