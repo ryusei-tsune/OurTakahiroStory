@@ -1,5 +1,5 @@
 <template>
-  <div>テンプレート{{test}}</div>
+  <div>{{corArr}}{{corArr[0]}}</div>
 </template>
 <script>
 export default {
@@ -13,8 +13,7 @@ export default {
   middleware: [],
   data() {
     return {
-      test: 3,
-      corArr: []
+      corArr: [],
     }
   },
   watch: {},
@@ -47,10 +46,9 @@ export default {
           // 
           optimizeWaypoints: true,
       }
-      // thisのスコープの都合上コールバック関数ないでdataを使用するために代入する
-      var corArr = this.corArr
+
       // requestを使ってルート検索
-      var result = directionsService.route(request, function(result, status) {
+      directionsService.route(request, (result, status) => {
           if (status == 'OK') {
             // 総距離
             var distanceText = result.routes[0].legs[0].distance.text.split(' ')
@@ -88,18 +86,13 @@ export default {
               if (sum > splitDist * (cnt+1)) {
                 var lat = result.routes[0].legs[0].steps[i].lat_lngs[0].lat()
                 var lng = result.routes[0].legs[0].steps[i].lat_lngs[0].lng()
-                corArr.push([lat, lng])
+                this.corArr.push({lat: lat, lng:lng})
                 cnt++
               }
               i++
             }
-            var lat = result.routes[0].overview_path[0].lat()
-            var lng = result.routes[0].overview_path[0].lng()
-            return corArr
           }
       })
-      // console.log('corArr')
-      // console.log(this.corArr)
   },
   }
 }
