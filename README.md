@@ -63,4 +63,5 @@ openssl req -x509 -newkey rsa:4096 -sha256 \
 -out static/ssl_cert/https_server.cert.pem
 ```
 
-作成後は[二回目以降](#二回目以降)と同じ
+作成後は[二回目以降](#二回目以降)と同じ  
+npm run dev 後にスマホからアクセスするとコンパスが使える。[参考 url](https://bellbellbell.info/2020/08/check-local-env-from-smartphone/)
