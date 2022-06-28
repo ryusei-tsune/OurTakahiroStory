@@ -1,5 +1,5 @@
 <template>
-  <div>{{corArr}}{{corArr[0]}}</div>
+  <div>{{corArr}}</div>
 </template>
 <script>
 export default {
@@ -31,8 +31,8 @@ export default {
   methods: {
     // 引数としてやまりょうから店舗の位置情報を受け取る,google, origin, destination
     getStreatViewCordination() {
-      const origin = "東京都庁"
-      const destination = "茨城県庁"
+      const origin = "東京駅"
+      const destination = "新宿駅"
       var directionsService = new google.maps.DirectionsService()
       var request = {
           // 開始地点
