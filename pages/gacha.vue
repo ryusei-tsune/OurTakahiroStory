@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[#69B3B7]">
+  <div>
     <div class="text-center text-5xl pt-10">
       <span class="p-2" style="background-color: white"> 回してごはん </span>
     </div>
@@ -205,6 +205,11 @@ export default {
   },
 }
 </script>
+<style>
+body {
+  background-color: rgb(100, 170, 180);
+}
+</style>
 <style scoped>
 .gacha-img {
   width: 400px;

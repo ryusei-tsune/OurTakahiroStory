@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[#69B3B7]">
+  <div>
     <div style="padding-top: 100px">
       <div
         class="
@@ -48,9 +48,6 @@ export default {
     imgHeight() {
       return this.innerHeight + 'px'
     },
-    google() {
-      return window.google
-    },
   },
   created() {},
   beforeMount() {},
@@ -68,6 +65,11 @@ export default {
   },
 }
 </script>
+<style>
+body {
+  background-color: rgb(100, 170, 180);
+}
+</style>
 <style scoped>
 .destination {
   font-weight: bold;
@@ -105,7 +107,7 @@ export default {
   -webkit-animation: anime 9s 0s 1;
   animation: anime 9s 0s 1;
   display: block;
-  z-index: 1;
+  z-index: -2;
 }
 @keyframes anime {
   0% {
