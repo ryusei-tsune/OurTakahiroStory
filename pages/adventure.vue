@@ -1,28 +1,29 @@
 <template>
-  <div class="bg-teal-600 flex flex-col h-screen justify-center items-center space-y-4">
-    <div class="bg-yellow-500 text-center bg-opacity-100 w-10/12 p-4 border-yellow-400 border-4">
-      <p class="text-white font-bold text-2xl">お店が見つかるまで</p>
-      <p class="text-white font-bold text-2xl">あと{{ this.checkpoint_count }}つ!</p>
+  <div class="bg-[#69B3B7] flex flex-col justify-center items-center space-y-4 pt-10 pb-10 h-screen">
+    <div class="bg-[#F2B816] text-center bg-opacity-100 w-10/12 p-4 border-[#F9D10D] border-4">
+      <p class="text-white font-bold text-xl">お店が見つかるまで</p>
+      <p class="text-white font-bold text-xl">あと{{ this.checkpoint_count }}つ!</p>
     </div>
+
     <div class="flex flex-col justify-center items-center space-y-1 w-full">
-      <p class="text-white text-xl font-bold">＼ ここを見つけてみよう ／</p>
+      <p class="text-white text-xl font-bold">＼ ここを見つけてみよう 残り {{ this.distance_to_ckpt }} m／</p>
       <div class="h-0 w-0" id="gmap"></div>
-      <div class="h-[50vh] w-10/12" id="gpano"></div>
+      <div class="h-[40vh] w-10/12" id="gpano"></div>
     </div>
+    <Compus v-bind:target_deg="this.angle_to_ckpt" />
 
     <div class="flex flex-row justify-center items-center space-x-5 w-full">
       <button
         v-if="isGoal"
         class="
-          bg-yellow-500
-          hover:bg-yellow-400
+          bg-[#F2B816]
           text-white
           font-bold
           text-xl
-          py-10
+          py-6
           px-4
           rounded-full
-          border-yellow-400 border-4
+          border-[#F9D10D] border-4
           focus:shadow-outline
         "
         @click="to_goalPage()"
@@ -32,15 +33,14 @@
       <button
         v-else
         class="
-          bg-yellow-500
-          hover:bg-yellow-400
+          bg-[#F2B816]
           text-white
           font-bold
           text-xl
-          py-10
+          py-6
           px-4
           rounded-full
-          border-yellow-400 border-4
+          border-[#F9D10D] border-4
           focus:shadow-outline
         "
         @click="getNextPosition()"
@@ -71,10 +71,11 @@
   </div>
 </template>
 <script>
+import Compus from '~/components/Compus.vue'
 export default {
   head() {},
   layout: 'default',
-  components: {},
+  components: { Compus },
   middleware: [],
   data() {
     return {
@@ -86,6 +87,7 @@ export default {
         { lat: 34.3120297, lng: 135.5948249 },
         { lat: 35.1790435, lng: 136.8768059 },
         { lat: 35.182609, lng: 136.927285 },
+        { lat: 35.652639, lng: 139.544025 },
       ],
       checkpoint_count: 0,
       distance_to_ckpt: 0,
@@ -162,6 +164,10 @@ export default {
         linksControl: false,
         panControl: false,
         enableCloseButton: false,
+        motionTracking: false,
+        motionTrackingControl: false,
+        clickToGo: false,
+        zoomControl: false,
       })
       map.setStreetView(panorama)
     },
@@ -206,15 +212,11 @@ export default {
       return (value * Math.PI) / 180
     },
     setAngleToCkpt(location_from, location_to) {
-      // TODO？
-      // ２点間の方角を求める (コンパスできたらいいな)
-      // 北:0度、東:90度、南:180度、西:270度
-      //　端末の角度とれる↓
-      // https://developer.mozilla.org/ja/docs/Web/Events/Detecting_device_orientation
-      var x1 = location_from.lat
-      var y1 = location_from.lng
-      var x2 = location_to.lat
-      var y2 = location_to.lng
+      //this.angle_to_ckpt:compusに目的地までの角度
+      var x1 = (location_from.lng * Math.PI) / 180
+      var y1 = (location_from.lat * Math.PI) / 180
+      var x2 = (location_to.lng * Math.PI) / 180
+      var y2 = (location_to.lat * Math.PI) / 180
       var delta_x = x2 - x1
       var r = 6378.137
       var d
@@ -224,11 +226,11 @@ export default {
       var a, b
       a = Math.sin(delta_x)
       b = Math.cos(y1) * Math.tan(y2) - Math.sin(y1) * Math.cos(delta_x)
-      fai = Math.atan2(b, a)
-      if (fai >= 0) {
-        this.angle_to_ckpt = Math.round((fai * 180.0) / Math.PI)
+      fai = (Math.atan2(a, b) * 180) / Math.PI
+      if (fai < 0) {
+        this.angle_to_ckpt = fai + 360
       } else {
-        this.angle_to_ckpt = Math.round(((fai + 2 * Math.PI) * 180.0) / Math.PI)
+        this.angle_to_ckpt = fai
       }
     },
   },
