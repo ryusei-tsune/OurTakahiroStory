@@ -17,6 +17,12 @@ export default {
     ],
 
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0',
+      },
+    ],
     script: [
       { src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` },
       { src: `https://maps.google.com/maps/api/js?v=3.33&key=${process.env.API_KEY}&libraries=places` },
@@ -28,6 +34,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
+
+  serverMiddleware: [{ path: '/', handler: '~/server-middleware/index.js' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: false,

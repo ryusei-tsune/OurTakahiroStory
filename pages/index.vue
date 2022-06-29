@@ -1,7 +1,7 @@
 <template>
   <div class="bg-[#69B3B7] flex flex-col h-screen justify-center items-center space-y-4">
     <div class="flex flex-col justify-center items-center space-y-1 w-full">
-      <img src="../static/gohan.png" width="600" height="300" />
+      <img src="/logo.png" width="600" height="300" />
     </div>
     <div class="flex flex-col justify-center items-center space-y-1 w-full">
       <p class="text-white text-2xl font-bold">友達と「この後ご飯に行こう！」となった時</p>
@@ -35,3 +35,5 @@
 
 <script>
 </script>
+<style scoped>
+</style>
