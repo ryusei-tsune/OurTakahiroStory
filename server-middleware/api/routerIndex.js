@@ -24,22 +24,40 @@ router.get('/genre', async (req, res, next) => {
     // G014 カフェ・スイーツ
     // G015 その他グルメ
     const { data } = await axios.get(genre_url)
-    console.log(data)
     xml2js.parseString(data, (err, result) => {
-      console.log(result)
       res.status(200).json({ data: result.results.genre })
     })
   } catch (err) {
-    console.log('error')
     res.status(400).end()
   }
 })
-router.get('/small-area', async (req, res, next) => {
+router.get('/search', async (req, res, next) => {
   try {
-    // const area_url = `http://webservice.recruit.co.jp/hotpepper/small_area/v1/?key=${process.env.HOT_PEPPER_KEY}`
-    const area_url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.HOT_PEPPER_KEY}&small_area=X609`
-    const { data } = await axios.get(area_url)
-    res.status(200).json(data)
+    const genre_url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.HOT_PEPPER_KEY}&lat=34.66504936361284&lng=133.9213622897857&range=2&genre=G001`
+    const { data } = await axios.get(genre_url)
+    xml2js.parseString(data, (err, result) => {
+      const num = Math.floor(Math.random() * result.results.shop.length)
+      res.status(200).json({ data: result.results.shop[num].name })
+    })
+  } catch (err) {
+    res.status(400).end()
+  }
+})
+router.post('/search-eatery', async (req, res, next) => {
+  try {
+    const search_url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${
+      process.env.HOT_PEPPER_KEY
+    }&lat=${String(req.body.lat)}&lng=${String(req.body.lng)}&range=2${req.body.genre}`
+    const { data } = await axios.get(search_url)
+    xml2js.parseString(data, (err, result) => {
+      if (typeof result.results.shop === 'undefined') {
+        res.status(200).json({ data: false })
+      } else {
+        console.log(result.results.shop.length)
+        const num = Math.floor(Math.random() * result.results.shop.length)
+        res.status(200).json({ data: result.results.shop[num].name })
+      }
+    })
   } catch (err) {
     res.status(400).end()
   }

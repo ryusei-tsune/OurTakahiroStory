@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="text-center text-5xl pt-10">
-      <span class="p-2" style="background-color: white"> 回してごはん </span>
+    <div class="flex jsutify-center">
+      <img src="/logo.png" class="logo mx-auto" />
     </div>
     <div class="flex jsutify-center">
       <img src="/gacha.png" alt="" class="gacha-img mx-auto" />
@@ -49,6 +49,7 @@ export default {
       isHandle: false,
       isGacha: false,
       isScale: false,
+      isNone: false,
       width: window.innerWidth,
       height: window.innerHeight,
       handle_y: '-180px',
@@ -60,6 +61,7 @@ export default {
       longitude: 0,
       imgItems: ['/any.png', '/japanese.png', '/western.png', 'chinese.png'],
       isSelected: [true, false, false, false],
+      genre_code: ['G004', 'G005', 'G007'],
     }
   },
   watch: {},
@@ -82,7 +84,18 @@ export default {
     window.addEventListener('resize', this.windowResize)
     this.windowResize()
     // this.init()
-    this.$store.commit('mutation', { data: '胡白' })
+    navigator.geolocation.watchPosition(
+      (position) => {
+        const location = position.coords
+        this.latitude = location.latitude
+        this.longitude = location.longitude
+      },
+      (err) => {
+        this.isWatching = false
+        console.log(err)
+      },
+      { enableHighAccuracy: true }
+    )
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.windowResize)
@@ -108,46 +121,67 @@ export default {
     },
     async choice() {
       this.isHandle = true
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          return resolve()
-        }, 3200)
-      })
-      this.isGacha = true
-      setTimeout(() => {
-        this.isScale = true
-        console.log(this.isScale)
-        this.$router.push('/adventure')
-      }, 1200)
-    },
-    setStore() {
-      const google = this.google
-      const map = new google.maps.Map(document.getElementById('gmap'), {
-        //center: new google.maps.LatLng(this.latitude,this.longitude),
-        center: new google.maps.LatLng(35.6813092, 139.7677269), //東京駅
-        zoom: 15,
-      })
-
-      const placeService = new google.maps.places.PlacesService(map)
-
-      placeService.nearbySearch(
-        {
-          location: new google.maps.LatLng(35.6813092, 139.7677269), //東京駅
-          //location: new google.maps.LatLng(this.latitude,this.longitude),
-          radius: 500,
-          type: ['restaurant'],
-        },
-        (results, status) => {
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
-            for (var i = 0; i < results.length; i++) {
-              var place = results[i]
-              this.store_info.push(place)
-            }
-            console.log(this.store_info)
+      let genre_data = ''
+      this.isSelected.forEach((element, index) => {
+        if (element) {
+          if (index === 0) {
+            genre_data += '&genre=G004&genre=G005&genre=G007'
+          } else {
+            genre_data += `&genre=${this.genre_code[index - 1]}`
           }
         }
-      )
+      })
+
+      console.log(this.latitude, this.longitude)
+      const post_data = { genre: genre_data, lat: this.latitude, lng: this.longitude }
+      const { data } = await this.$axios.post('/api/search-eatery', post_data)
+      console.log(data.data)
+      if (!data.data) {
+        this.isNone = true
+        console.log(this.isNone)
+      } else {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            return resolve()
+          }, 3200)
+        })
+        this.isGacha = true
+        setTimeout(() => {
+          this.isScale = true
+          console.log(data.data[0])
+          this.$store.commit('mutation', { data: data.data[0] })
+          this.$router.push('/adventure')
+        }, 1200)
+      }
     },
+    // setStore() {
+    //   const google = this.google
+    //   const map = new google.maps.Map(document.getElementById('gmap'), {
+    //     //center: new google.maps.LatLng(this.latitude,this.longitude),
+    //     center: new google.maps.LatLng(35.6813092, 139.7677269), //東京駅
+    //     zoom: 15,
+    //   })
+
+    //   const placeService = new google.maps.places.PlacesService(map)
+
+    //   placeService.nearbySearch(
+    //     {
+    //       location: new google.maps.LatLng(35.6813092, 139.7677269), //東京駅
+    //       //location: new google.maps.LatLng(this.latitude,this.longitude),
+    //       radius: 500,
+    //       type: ['restaurant'],
+    //     },
+    //     (results, status) => {
+    //       if (status == google.maps.places.PlacesServiceStatus.OK) {
+    //         for (var i = 0; i < results.length; i++) {
+    //           var place = results[i]
+    //           this.store_info.push(place)
+    //         }
+    //         console.log(this.store_info)
+    //       }
+    //     }
+    //   )
+    // },
     selectGenre(index) {
       if (index === 0) {
         this.$set(this.isSelected, index, !this.isSelected[index])
@@ -184,6 +218,10 @@ body {
 }
 </style>
 <style scoped>
+.logo {
+  width: 50%;
+  max-width: 200px;
+}
 .gacha-img {
   width: 400px;
 }
