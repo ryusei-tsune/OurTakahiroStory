@@ -12,8 +12,6 @@ export const mutations = {
   //$store.commit("mutation")
   mutation(state, payload) {
     state.name = payload.data
-    console.log(state.name)
-    console.log(payload.data)
   },
 }
 export const actions = {
