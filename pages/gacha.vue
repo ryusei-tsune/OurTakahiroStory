@@ -18,48 +18,6 @@
         <span class="material-symbols-outlined"> question_mark </span>
       </div>
     </div>
-    <!-- <div class="flex jsutify-center">
-      <button
-        class="mx-auto w-12 h-12 bg-blue-400 text-lg text-white font-semibold rounded-full hover:bg-blue-500"
-        @click="turnOn()"
-      >
-        回す
-      </button>
-    </div>
-    <nuxt-link to="/goal">goal</nuxt-link> -->
-
-    <!-- <div class="bg-[#69B3B7] flex flex-col h-screen justify-center items-center space-y-4">
-    <div class="flex flex-col justify-center items-center space-y-1 w-full">
-      <img src="../pages/gohan.png" width="250" height="125" />
-    </div>
-    <div class="flex flex-row justify-center items-center space-x-5 w-full">
-      <p class="text-white text-xl font-bold">＼ タップしてガチャを回してね ／</p>
-    </div>
-    <div class="flex flex-row justify-center items-center space-x-5 w-full">
-      <img src="../pages/machine.png" width="400" height="800" />
-    </div>
-    <div class="flex flex-row justify-center items-center space-x-5 w-full">
-      <button
-        class="
-          bg-[#EF6CA8]
-          //hover:bg-yellow-400
-          text-white
-          font-bold
-          text-xl
-          py-10
-          px-4
-          rounded-full
-          border-[#FC8DBB] border-4
-          focus:shadow-outline
-        "
-       "
-      >
-        回す！
-      </button>
-    </div>
-    <div class="flex flex-col justify-center items-center space-y-1 w-full">
-      <div class="h-0 w-0" id="gmap"></div>
-    </div> -->
   </div>
 </template>
 
@@ -296,29 +254,6 @@ body {
     width: 5px;
   }
 }
-/*
-@keyframes grow {
-  0% {
-    box-shadow: 0 0 10px 5px rgb(198, 198, 198), 0 0 20px 10px rgb(255, 180, 60, 0 0 30px 20px rgb(250, 105, 30; */
-/* box-shadow: 0 0 10px 5px rgb(198, 198, 198), 0 0 20px 10px rgb(60, 160, 255, 0 0 30px 20px rgb(50, 88, 255;
-    box-shadow: 0 0 10px 5px rgb(198, 198, 198), 0 0 20px 10px rgb(255, 180, 60), 0 0 30px 20px rgb(250, 105, 30);
-  }
-  20% {
-    box-shadow: 0 0 20px 10px rgb(198, 198, 198), 0 0 30px 15px rgb(255, 180, 60), 0 0 40px 25px rgb(250, 105, 30);
-  }
-  40% {
-    box-shadow: 0 0 30px 15px rgb(198, 198, 198), 0 0 40px 20px rgb(255, 180, 60), 0 0 50px 30px rgb(250, 105, 30);
-  }
-  60% {
-    box-shadow: 0 0 30px 15px rgb(198, 198, 198), 0 0 40px 20px rgb(255, 180, 60), 0 0 50px 30px rgb(250, 105, 30);
-  }
-  80% {
-    box-shadow: 0 0 20px 10px rgb(198, 198, 198), 0 0 30px 15px rgb(255, 180, 60), 0 0 40px 25px rgb(250, 105, 30);
-  }
-  100% {
-    box-shadow: 0 0 10px 5px rgb(198, 198, 198), 0 0 20px 10px rgb(255, 180, 60), 0 0 30px 20px rgb(250, 105, 30);
-  }
-} */
 .push {
   position: absolute;
   transform: translate(50%, var(--capsul-y));
@@ -403,18 +338,6 @@ body {
   }
   100% {
     transform: translate(0%, 0%);
-  }
-}
-.zoom-up {
-  z-index: 1;
-  /* animation: zoom 5s 0s 1; */
-}
-@keyframes zoom {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(10);
   }
 }
 </style>
