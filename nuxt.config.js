@@ -23,10 +23,7 @@ export default {
         href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0',
       },
     ],
-    script: [
-      { src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` },
-      // { src: `https://maps.google.com/maps/api/js?v=3.33&key=${process.env.API_KEY}&libraries=places` },
-    ],
+    script: [{ src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -69,9 +66,9 @@ export default {
   server: {
     host: '0.0.0.0',
     port: process.env.PORT || 3000,
-    // https: {
-    //   key: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.key.pem')),
-    //   cert: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.cert.pem')),
-    // },
+    https: {
+      key: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.key.pem')),
+      cert: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.cert.pem')),
+    },
   },
 }
