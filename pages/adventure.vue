@@ -1,27 +1,33 @@
 <template>
-  <div class="bg-[#69B3B7] flex flex-col justify-center items-center space-y-4 pt-10 pb-10 h-screen">
-    <div class="bg-[#F2B816] text-center bg-opacity-100 w-10/12 p-4 border-[#F9D10D] border-4">
-      <p class="text-white font-bold text-xl">お店が見つかるまで</p>
-      <p class="text-white font-bold text-xl">あと{{ this.checkpoint_count }}つ!</p>
+  <div class="bg-[#69B3B7] flex flex-col justify-start items-center space-y-4 pt-3 pb-10 h-screen">
+    <div class="flex flex-row justify-center items-end space-x-1">
+      <p class="text-white font-medium text-lg">残り</p>
+      <p class="text-white font-medium text-4xl">{{ distance_to_ckpt }}</p>
+      <p class="text-white font-medium text-lg">m</p>
+    </div>
+    <div class="bg-[#F2B816] text-center bg-opacity-100 w-80%] pt-3 pb-3 pl-3 pr-3 border-[#F9D10D] border-4">
+      <p class="text-white tracking-widest font-semibold text-3xl">お店まであと{{ checkpoint_count }}つ!</p>
     </div>
 
-    <div class="flex flex-col justify-center items-center space-y-1 w-full">
-      <p class="text-white text-xl font-bold">＼ ここを見つけてみよう 残り {{ this.distance_to_ckpt }} m／</p>
+    <div class="relative flex flex-col justify-center items-center space-y-1 w-full pt-6 pb-10">
+      <p class="text-white text-xl font-semibold pb-4">＼ この写真の場所を見つけよう ／</p>
+      <div class="absolute right-[-16px] top-[45px] z-[10000]">
+        <Compus v-bind:target_deg="angle_to_ckpt" />
+      </div>
       <div class="h-0 w-0" id="gmap"></div>
-      <div class="h-[40vh] w-10/12" id="gpano"></div>
+      <div class="h-[40vh] w-[90%]" id="gpano"></div>
     </div>
-    <Compus v-bind:target_deg="this.angle_to_ckpt" />
 
-    <div class="flex flex-row justify-center items-center space-x-5 w-full">
+    <div class="flex flex-row justify-center items-center space-x-5 border-[#F2B816] border-4 rounded-full">
       <button
         v-if="isGoal"
         class="
           bg-[#F2B816]
           text-white
           font-bold
-          text-xl
-          py-6
-          px-4
+          text-lg
+          py-7
+          px-2
           rounded-full
           border-[#F9D10D] border-4
           focus:shadow-outline
@@ -36,9 +42,9 @@
           bg-[#F2B816]
           text-white
           font-bold
-          text-xl
-          py-6
-          px-4
+          text-lg
+          py-7
+          px-2
           rounded-full
           border-[#F9D10D] border-4
           focus:shadow-outline
@@ -67,6 +73,10 @@
         目的地までの角度：<span>{{ this.angle_to_ckpt }}</span
         ><span>度</span>
       </p>
+      <p>
+        coordinate：<span>{{ this.coordinates }}</span
+        ><span>度</span>
+      </p>
     </div> -->
   </div>
 </template>
@@ -84,17 +94,14 @@ export default {
       longitude: 0,
       //（あっきーから）座標を入れるリスト coordinates
       coordinates: [
-        { lat: 34.3120297, lng: 135.5948249 },
-        { lat: 35.1790435, lng: 136.8768059 },
-        { lat: 35.182609, lng: 136.927285 },
-        { lat: 35.652639, lng: 139.544025 },
+        // { lat: 34.3120297, lng: 135.5948249 },
+        // { lat: 35.1790435, lng: 136.8768059 },
+        // { lat: 35.182609, lng: 136.927285 },
+        // { lat: 35.652639, lng: 139.544025 },
       ],
       checkpoint_count: 0,
       distance_to_ckpt: 0,
       angle_to_ckpt: 0,
-      store_name: "",
-      store_latitude: 0,
-      store_longitude: 0,
     }
   },
   watch: {
@@ -108,6 +115,12 @@ export default {
         console.log('change_position', newVal)
       },
     },
+    coordinates: {
+      handler: function (newVal, oldVal) {
+        // coordinatesが追加されたらinitする
+        this.init()
+      },
+    },
   },
   computed: {
     google() {
@@ -117,14 +130,26 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    this.store_name = window.localStorage.getItem("store_name")
-    this.store_latitude = window.localStorage.getItem("store_latitude")
-    this.store_longitude = window.localStorage.getItem("store_longitude")
-    //TODO:ここであっきーの関数でcoordinatesに値代入する
-    this.init()
+    //coordinates読み込みまでに時間があるからwatchで同期処理させる
+    this.getCurrentPosition()
   },
   beforeDestroy() {},
   methods: {
+    getCurrentPosition() {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.latitude = position.coords.latitude //現在緯度
+          this.longitude = position.coords.longitude //現在経度
+          // TODO：storeから目的地の習得（多分座標の方がいい）
+          this.getStreatViewCordination('調布駅')
+        },
+        (err) => {
+          this.isWatching = false
+          console.log(err)
+        },
+        { enableHighAccuracy: true }
+      )
+    },
     init() {
       //初期ストリートビュー準備
       this.checkpoint_count = this.coordinates.length
@@ -190,10 +215,7 @@ export default {
     },
     to_goalPage() {
       // 店名＋アニメーション画面に遷移するためのボタン関数
-      console.log('次のページへ')
-      // TODO：下に最後のページのパス指定
-      window.localStorage.setItem("store_name", this.store_name)
-      this.$router.push('/goal')
+      this.$router.push({ name: 'goal' })
     },
     setDistanceToCkpt(location1, location2) {
       // チェックポイントまでの直線距離を現在地から計算する。(m単位)
@@ -239,6 +261,71 @@ export default {
       } else {
         this.angle_to_ckpt = fai
       }
+    },
+    getStreatViewCordination(destination_akki) {
+      const origin = new google.maps.LatLng(this.latitude, this.longitude)
+      var directionsService = new google.maps.DirectionsService()
+      var request = {
+        // 開始地点
+        origin: origin,
+        // 終了地点　TODO:座標の方がいい
+        destination: destination_akki,
+        // 移動方法：徒歩
+        travelMode: google.maps.DirectionsTravelMode.WALKING,
+        // 残り距離の表示がキロメートルになる
+        unitSystem: google.maps.DirectionsUnitSystem.METRIC,
+        //
+        optimizeWaypoints: true,
+      }
+      // requestを使ってルート検索
+      directionsService.route(request, (result, status) => {
+        if (status == 'OK') {
+          // 総距離
+          var distanceText = result.routes[0].legs[0].distance.text.split(' ')
+          var distance = Number(distanceText[0])
+          // 距離に応じて取得する座標の数を決める
+          var n
+          if (distance < 0.1) {
+            n = 1
+          } else if (distance < 0.3) {
+            n = 2
+          } else {
+            n = 3
+          }
+          // 次の写真までの距離
+          var splitDist = distance / (n + 1)
+          var sum = 0
+          var cnt = 0
+          var i = 0
+          var base = 0
+          var len = result.routes[0].legs[0].steps.length
+          while (cnt <= n && i < len) {
+            var tmp = result.routes[0].legs[0].steps[i].distance.text.split(' ')
+            // 距離の表記がmとkmの場合がある
+            if (tmp[1] == 'm') {
+              base = 1000
+            } else if (tmp[1] == 'km') {
+              base = 1
+            }
+            var number = Number(tmp[0])
+            sum += number / base
+            if (sum > splitDist * (cnt + 1)) {
+              var lat = result.routes[0].legs[0].steps[i].lat_lngs[0].lat()
+              var lng = result.routes[0].legs[0].steps[i].lat_lngs[0].lng()
+              this.coordinates.unshift({ lat: lat, lng: lng })
+              cnt++
+            }
+            i++
+          }
+          if (len !== this.coordinates.length) {
+            //目的地に一番近い場所を追加
+            //TODO:最後に目的地の座標を入れる
+            var lat = result.routes[0].legs[0].steps[len - 1].lat_lngs[0].lat()
+            var lng = result.routes[0].legs[0].steps[len - 1].lat_lngs[0].lng()
+            this.coordinates.unshift({ lat: lat, lng: lng })
+          }
+        }
+      })
     },
   },
 }
