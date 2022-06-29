@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <div style="padding-top: 100px">
       <div
         class="
@@ -19,8 +19,10 @@
       </div>
     </div>
     <div class="bg" :style="{ height: imgHeight }" />
-    <div class="text-white text-5xl m-auto justify-center flex destination">
-      {{ name }}
+    <div class="text-white text-center destination">
+      <div>
+        {{ name }}
+      </div>
     </div>
     <div class="m-auto justify-center flex">
       <div class="capsule"></div>
@@ -73,20 +75,21 @@ body {
 <style scoped>
 .destination {
   font-weight: bold;
+  font-size: 35px;
   animation: fade-in 2s 0s forwards;
 }
 @keyframes fade-in {
   0% {
     opacity: 0;
-    transform: scale(0) translate(0, 200%);
+    transform: scale(0) translate(0, 50%);
   }
   90% {
     opacity: 0.1;
-    transform: scale(0.1) translate(0, 200%);
+    transform: scale(0.1) translate(0, 50%);
   }
   100% {
     opacity: 1;
-    transform: scale(1) translate(0, 200%);
+    transform: scale(1) translate(0, 50%);
   }
 }
 .bg {

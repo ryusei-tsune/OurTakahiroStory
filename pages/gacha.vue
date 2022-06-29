@@ -22,14 +22,17 @@
     </div>
     <div class="max-w-lg">
       <div class="grid grid-cols-4 gap-4" style="transform: translate(0, -50%)">
-        <div class="flex justify-center items-center" v-for="(item, index) in imgItems" :key="`img-item-${index}`">
-          <img
-            :src="item"
-            alt=""
-            class="button-img"
-            @click="selectGenre(index)"
-            :class="{ ' selected': isSelected[index] }"
-          />
+        <div v-for="(item, index) in imgItems" :key="`img-item-${index}`">
+          <div class="flex justify-center items-center">
+            <img
+              :src="item.img"
+              alt=""
+              class="button-img"
+              @click="selectGenre(index)"
+              :class="{ ' selected': isSelected[index] }"
+            />
+          </div>
+          <div class="text-center">{{ item.type }}</div>
         </div>
       </div>
     </div>
@@ -62,7 +65,12 @@ export default {
       corArr: [],
       latitude: 0,
       longitude: 0,
-      imgItems: ['/any.png', '/japanese.png', '/western.png', 'chinese.png'],
+      imgItems: [
+        { img: '/any.png', type: 'なんでも' },
+        { img: '/japanese.png', type: '日本食' },
+        { img: '/western.png', type: '洋食' },
+        { img: 'chinese.png', type: '中華' },
+      ],
       isSelected: [true, false, false, false],
       genre_code: ['G004', 'G005', 'G007'],
     }
@@ -364,8 +372,9 @@ body {
 }
 .button-img {
   width: 50%;
+  opacity: 0.5;
 }
 .selected {
-  opacity: 0.5;
+  opacity: 1;
 }
 </style>

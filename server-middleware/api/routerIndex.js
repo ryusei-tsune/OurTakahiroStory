@@ -31,18 +31,7 @@ router.get('/genre', async (req, res, next) => {
     res.status(400).end()
   }
 })
-router.get('/search', async (req, res, next) => {
-  try {
-    const genre_url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.HOT_PEPPER_KEY}&lat=34.66504936361284&lng=133.9213622897857&range=2&genre=G001`
-    const { data } = await axios.get(genre_url)
-    xml2js.parseString(data, (err, result) => {
-      const num = Math.floor(Math.random() * result.results.shop.length)
-      res.status(200).json({ data: result.results.shop[num].name })
-    })
-  } catch (err) {
-    res.status(400).end()
-  }
-})
+
 router.post('/search-eatery', async (req, res, next) => {
   try {
     const search_url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.HOT_PEPPER_KEY}&lat=${req.body.lat}&lng=${req.body.lng}&range=2${req.body.genre}`
