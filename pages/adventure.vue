@@ -92,6 +92,9 @@ export default {
       checkpoint_count: 0,
       distance_to_ckpt: 0,
       angle_to_ckpt: 0,
+      store_name: "",
+      store_latitude: 0,
+      store_longitude: 0,
     }
   },
   watch: {
@@ -114,6 +117,9 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
+    this.store_name = window.localStorage.getItem("store_name")
+    this.store_latitude = window.localStorage.getItem("store_latitude")
+    this.store_longitude = window.localStorage.getItem("store_longitude")
     //TODO:ここであっきーの関数でcoordinatesに値代入する
     this.init()
   },
@@ -186,7 +192,8 @@ export default {
       // 店名＋アニメーション画面に遷移するためのボタン関数
       console.log('次のページへ')
       // TODO：下に最後のページのパス指定
-      // this.$router.push('/')
+      window.localStorage.setItem("store_name", this.store_name)
+      this.$router.push('/goal')
     },
     setDistanceToCkpt(location1, location2) {
       // チェックポイントまでの直線距離を現在地から計算する。(m単位)
