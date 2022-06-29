@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div class="text-center text-5xl pt-10">
-      <span class="p-2" style="background-color: white"> 回してごはん </span>
+    <div class="m-auto justify-center flex">
+      <div class="logo"></div>
     </div>
+    <div class="text-center text-white">＼ タップしてガチャを回してね ／</div>
     <div class="flex jsutify-center">
       <img src="/gacha.png" alt="" class="gacha-img mx-auto" />
     </div>
@@ -11,22 +12,15 @@
         <img src="/handle.png" alt="" :class="{ 'handle-motion': isHandle }" @click="turnOn()" />
         <div v-for="i in 12" :key="`sunlight-item${i}`"></div>
       </div>
-      <div class="push" v-if="!isHandle"><span class="material-symbols-outlined"> north_west </span>押してね！</div>
+      <div class="push" v-if="!isHandle" style="color: white">
+        <span class="material-symbols-outlined" style="color: black"> north_west </span>押してね！
+      </div>
     </div>
     <div v-if="isGacha" class="gacha-capsul mx-auto" :style="translate">
       <div class="capsule-motion flex justify-center" :class="{ 'zoom-up': isScale }">
         <span class="material-symbols-outlined"> question_mark </span>
       </div>
     </div>
-    <!-- <div class="flex jsutify-center">
-      <button
-        class="mx-auto w-12 h-12 bg-blue-400 text-lg text-white font-semibold rounded-full hover:bg-blue-500"
-        @click="turnOn()"
-      >
-        回す
-      </button>
-    </div>
-    <nuxt-link to="/goal">goal</nuxt-link> -->
   </div>
 </template>
 
@@ -86,7 +80,6 @@ export default {
       this.isGacha = true
       setTimeout(() => {
         this.isScale = true
-        console.log(this.isScale)
       }, 1200)
     },
     windowResize() {
@@ -114,6 +107,15 @@ body {
 }
 </style>
 <style scoped>
+.logo {
+  background-image: url('/logo.png');
+  background-size: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  max-width: 300px;
+  height: 100px;
+}
 .gacha-img {
   width: 400px;
 }
@@ -128,7 +130,17 @@ body {
   left: 50%;
   z-index: 2;
 }
-
+@keyframes blow {
+  0% {
+    width: 5px;
+  }
+  50% {
+    width: 15px;
+  }
+  100% {
+    width: 5px;
+  }
+}
 .sunlight div::before {
   content: '';
   position: absolute;
@@ -188,40 +200,6 @@ body {
 .sunlight div:nth-child(12) {
   transform: rotate(330deg);
 }
-@keyframes blow {
-  0% {
-    width: 5px;
-  }
-  50% {
-    width: 15px;
-  }
-  100% {
-    width: 5px;
-  }
-}
-/*
-@keyframes grow {
-  0% {
-    box-shadow: 0 0 10px 5px rgb(198, 198, 198), 0 0 20px 10px rgb(255, 180, 60, 0 0 30px 20px rgb(250, 105, 30; */
-/* box-shadow: 0 0 10px 5px rgb(198, 198, 198), 0 0 20px 10px rgb(60, 160, 255, 0 0 30px 20px rgb(50, 88, 255;
-    box-shadow: 0 0 10px 5px rgb(198, 198, 198), 0 0 20px 10px rgb(255, 180, 60), 0 0 30px 20px rgb(250, 105, 30);
-  }
-  20% {
-    box-shadow: 0 0 20px 10px rgb(198, 198, 198), 0 0 30px 15px rgb(255, 180, 60), 0 0 40px 25px rgb(250, 105, 30);
-  }
-  40% {
-    box-shadow: 0 0 30px 15px rgb(198, 198, 198), 0 0 40px 20px rgb(255, 180, 60), 0 0 50px 30px rgb(250, 105, 30);
-  }
-  60% {
-    box-shadow: 0 0 30px 15px rgb(198, 198, 198), 0 0 40px 20px rgb(255, 180, 60), 0 0 50px 30px rgb(250, 105, 30);
-  }
-  80% {
-    box-shadow: 0 0 20px 10px rgb(198, 198, 198), 0 0 30px 15px rgb(255, 180, 60), 0 0 40px 25px rgb(250, 105, 30);
-  }
-  100% {
-    box-shadow: 0 0 10px 5px rgb(198, 198, 198), 0 0 20px 10px rgb(255, 180, 60), 0 0 30px 20px rgb(250, 105, 30);
-  }
-} */
 .push {
   position: absolute;
   transform: translate(50%, var(--capsul-y));
@@ -304,20 +282,11 @@ body {
   70% {
     transform: translate(0%, 0%);
   }
-  100% {
-    transform: translate(0%, 0%);
-  }
 }
 .zoom-up {
   z-index: 1;
-  /* animation: zoom 5s 0s 1; */
-}
-@keyframes zoom {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(10);
-  }
+  box-shadow: 0 0 10px #ffc, 0 0 20px #ffc, 0 0 30px #ff9, 0 0 40px #ff6, 0 0 70px #fc6, 0 0 80px #f99, 0 0 100px #ff96,
+    0 0 150px #ff96;
+  border-radius: 20px;
 }
 </style>

@@ -34,6 +34,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [{ src: '~/plugins/persistedState.js', ssr: false }],
 
+  serverMiddleware: [{ path: '/', handler: '~/server-middleware/index.js' }],
+
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: false,
 
@@ -66,9 +68,9 @@ export default {
   server: {
     host: '0.0.0.0',
     port: process.env.PORT || 3000,
-    https: {
-      key: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.key.pem')),
-      cert: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.cert.pem')),
-    },
+    // https: {
+    //   key: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.key.pem')),
+    //   cert: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.cert.pem')),
+    // },
   },
 }
