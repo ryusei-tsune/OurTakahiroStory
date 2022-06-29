@@ -2,12 +2,10 @@ import path from 'path'
 import fs from 'fs'
 
 export default {
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
-
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: '回してごはん',
+    title: 'OurTakahiroStory',
     htmlAttrs: {
       lang: 'en',
     },
@@ -25,14 +23,19 @@ export default {
         href: 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0',
       },
     ],
-    script: [{ src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` }],
+    script: [
+      { src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` },
+      // { src: `https://maps.google.com/maps/api/js?v=3.33&key=${process.env.API_KEY}&libraries=places` },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['@/assets/css/main.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: '~/plugins/persistedState.js', ssr: false }],
+  plugins: [],
+
+  serverMiddleware: [{ path: '/', handler: '~/server-middleware/index.js' }],
 
   serverMiddleware: [{ path: '/', handler: '~/server-middleware/index.js' }],
 
