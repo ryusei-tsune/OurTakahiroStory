@@ -12,23 +12,24 @@
       <p class="text-white text-2xl font-bold">新しいお店を開拓しましょう！</p>
     </div>
     <div class="flex flex-row justify-center items-center space-x-5 w-full">
-      <button
-        class="
-          bg-[#F2B816]
-          //hover:bg-yellow-400
-          text-white
-          font-bold
-          text-xl
-          py-10
-          px-4
-          rounded-full
-          border-[#F9D10D] border-4
-          focus:shadow-outline
-        "
-        @click="$router.push('/gacha')"
-      >
-        はじめる
-      </button>
+      <nuxt-link to="/gacha">
+        <button
+          class="
+            bg-[#F2B816]
+            //hover:bg-yellow-400
+            text-white
+            font-bold
+            text-xl
+            py-10
+            px-4
+            rounded-full
+            border-[#F9D10D] border-4
+            focus:shadow-outline
+          "
+        >
+          はじめる
+        </button>
+      </nuxt-link>
     </div>
   </div>
 </template>
