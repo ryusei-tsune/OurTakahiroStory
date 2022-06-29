@@ -141,7 +141,7 @@ export default {
           this.latitude = position.coords.latitude //現在緯度
           this.longitude = position.coords.longitude //現在経度
           // TODO：storeから目的地の習得（多分座標の方がいい）
-          this.getStreatViewCordination('調布駅')
+          this.getStreatViewCordination()
         },
         (err) => {
           this.isWatching = false
@@ -262,14 +262,15 @@ export default {
         this.angle_to_ckpt = fai
       }
     },
-    getStreatViewCordination(destination_akki) {
+    getStreatViewCordination() {
       const origin = new google.maps.LatLng(this.latitude, this.longitude)
+      const des = new google.maps.LatLng(this.$store.state.lat, this.$store.state.lng)
       var directionsService = new google.maps.DirectionsService()
       var request = {
         // 開始地点
         origin: origin,
         // 終了地点　TODO:座標の方がいい
-        destination: destination_akki,
+        destination: des,
         // 移動方法：徒歩
         travelMode: google.maps.DirectionsTravelMode.WALKING,
         // 残り距離の表示がキロメートルになる
