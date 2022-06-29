@@ -127,7 +127,7 @@ body {
   }
 }
 .capsule {
-  transform: translate(0, 50%);
+  transform: translate(0, 20%);
   background-image: url('/capsule-open.png');
   background-size: 100%;
   background-repeat: no-repeat;

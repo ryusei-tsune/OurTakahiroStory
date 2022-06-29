@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-screen justify-center items-center space-y-4">
     <div class="flex flex-col justify-center items-center space-y-1 w-full">
-      <img src="/logo.png" width="600" height="300" />
+      <img src="/logo.png" width="70%" style="max-width: 500px" />
     </div>
     <div class="flex flex-col justify-center items-center space-y-1 w-full text-center">
       <p class="text-white text-2xl font-bold">友達と「この後ご飯に行こう！」となった時</p>

@@ -33,9 +33,7 @@ export default {
   css: ['@/assets/css/main.css'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
-
-  serverMiddleware: [{ path: '/', handler: '~/server-middleware/index.js' }],
+  plugins: [{ src: '~/plugins/persistedState.js', ssr: false }],
 
   serverMiddleware: [{ path: '/', handler: '~/server-middleware/index.js' }],
 

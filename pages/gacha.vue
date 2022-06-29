@@ -1,25 +1,27 @@
 <template>
-  <div>
+  <div class="flex flex-col justify-center items-center space-y-4 my-2">
     <div class="flex jsutify-center">
       <img src="/logo.png" class="logo mx-auto" />
     </div>
+    <div class="text-white text-xl mt-0">＼ タップしてガチャを回してね ／</div>
+    <div v-if="isNone" class="text-red-600">指定したジャンルのお店が見つかりませんでした...</div>
     <div class="flex jsutify-center">
       <img src="/gacha.png" alt="" class="gacha-img mx-auto" />
     </div>
-    <div :style="translate">
-      <div class="handle-img mx-auto" :class="{ ' sunlight': !isHandle }">
+    <div :style="translate" class="flex jsutify-center">
+      <div class="handle-img" :class="{ ' sunlight': !isHandle }">
         <img src="/handle.png" alt="" :class="{ 'handle-motion': isHandle }" @click="choice()" />
         <div v-for="i in 12" :key="`sunlight-item${i}`"></div>
       </div>
       <div class="push" v-if="!isHandle"><span class="material-symbols-outlined"> north_west </span>押してね！</div>
     </div>
-    <div v-if="isGacha" class="gacha-capsul mx-auto" :style="translate">
-      <div class="capsule-motion flex justify-center" :class="{ 'zoom-up': isScale }">
-        <span class="material-symbols-outlined"> question_mark </span>
+    <div v-if="isGacha" class="gacha-capsul" :style="translate">
+      <div class="capsule-motion flex justify-center text-white" :class="{ 'light-up': isLight }">
+        <span class="material-symbols-outlined text-black"> question_mark </span>
       </div>
     </div>
-    <div class="flex justify-center mx-auto max-w-lg">
-      <div class="grid grid-cols-4 gap-4">
+    <div class="max-w-lg">
+      <div class="grid grid-cols-4 gap-4" style="transform: translate(0, -50%)">
         <div class="flex justify-center items-center" v-for="(item, index) in imgItems" :key="`img-item-${index}`">
           <img
             :src="item"
@@ -48,14 +50,15 @@ export default {
     return {
       isHandle: false,
       isGacha: false,
-      isScale: false,
+      isLight: false,
       isNone: false,
       width: window.innerWidth,
       height: window.innerHeight,
       handle_y: '-180px',
-      handle_width: '50px',
+      handleWidth: '50px',
       capsul_y: '-180px',
-      capsul_width: '50px',
+      capsulWidth: '50px',
+      pushHight: '-200px',
       corArr: [],
       latitude: 0,
       longitude: 0,
@@ -69,9 +72,10 @@ export default {
     translate() {
       return {
         '--handle-y': this.handle_y,
-        '--handle-width': this.handle_width,
+        '--handle-width': this.handleWidth,
         '--capsul-y': this.capsul_y,
-        '--capsul-width': this.capsul_width,
+        '--capsul-width': this.capsulWidth,
+        '--push': this.pushHight,
       }
     },
     google() {
@@ -83,7 +87,6 @@ export default {
   mounted() {
     window.addEventListener('resize', this.windowResize)
     this.windowResize()
-    // this.init()
     navigator.geolocation.watchPosition(
       (position) => {
         const location = position.coords
@@ -101,24 +104,6 @@ export default {
     window.removeEventListener('resize', this.windowResize)
   },
   methods: {
-    init() {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.latitude = position.coords.latitude //現在緯度
-          this.longitude = position.coords.longitude //現在経度
-          const google = this.google
-          const map = new google.maps.Map(document.getElementById('gmap'), {
-            center: new google.maps.LatLng(this.latitude, this.longitude),
-            zoom: 15,
-          })
-        },
-        (err) => {
-          this.isWatching = false
-          console.log(err)
-        },
-        { enableHighAccuracy: true }
-      )
-    },
     async choice() {
       this.isHandle = true
       let genre_data = ''
@@ -132,13 +117,16 @@ export default {
         }
       })
 
-      console.log(this.latitude, this.longitude)
       const post_data = { genre: genre_data, lat: this.latitude, lng: this.longitude }
       const { data } = await this.$axios.post('/api/search-eatery', post_data)
-      console.log(data.data)
-      if (!data.data) {
+      if (!data.status) {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            return resolve()
+          }, 3200)
+        })
         this.isNone = true
-        console.log(this.isNone)
+        this.isHandle = false
       } else {
         await new Promise((resolve) => {
           setTimeout(() => {
@@ -146,45 +134,24 @@ export default {
           }, 3200)
         })
         this.isGacha = true
-        setTimeout(() => {
-          this.isScale = true
-          console.log(data.data[0])
-          this.$store.commit('mutation', { data: data.data[0] })
+        setTimeout(async () => {
+          this.isLight = true
+          this.$store.commit('mutation', { name: data.name, lat: data.lat, lng: data.lng })
+          await new Promise((resolve) => {
+            setTimeout(() => {
+              return resolve()
+            }, 200)
+          })
           this.$router.push('/adventure')
         }, 1200)
       }
     },
-    // setStore() {
-    //   const google = this.google
-    //   const map = new google.maps.Map(document.getElementById('gmap'), {
-    //     //center: new google.maps.LatLng(this.latitude,this.longitude),
-    //     center: new google.maps.LatLng(35.6813092, 139.7677269), //東京駅
-    //     zoom: 15,
-    //   })
-
-    //   const placeService = new google.maps.places.PlacesService(map)
-
-    //   placeService.nearbySearch(
-    //     {
-    //       location: new google.maps.LatLng(35.6813092, 139.7677269), //東京駅
-    //       //location: new google.maps.LatLng(this.latitude,this.longitude),
-    //       radius: 500,
-    //       type: ['restaurant'],
-    //     },
-    //     (results, status) => {
-    //       if (status == google.maps.places.PlacesServiceStatus.OK) {
-    //         for (var i = 0; i < results.length; i++) {
-    //           var place = results[i]
-    //           this.store_info.push(place)
-    //         }
-    //         console.log(this.store_info)
-    //       }
-    //     }
-    //   )
-    // },
     selectGenre(index) {
       if (index === 0) {
         this.$set(this.isSelected, index, !this.isSelected[index])
+        for (let i = 1; i < 4; i++) {
+          this.$set(this.isSelected, i, false)
+        }
       } else {
         this.$set(this.isSelected, 0, false)
         this.$set(this.isSelected, index, !this.isSelected[index])
@@ -198,15 +165,17 @@ export default {
       this.height = window.innerHeight
       if (this.width < 400) {
         const rate = this.width / 400
-        this.handle_y = `${-180 * rate}px`
-        this.handle_width = '40px'
-        this.capsul_y = `${-170 * rate}px`
-        this.capsul_width = '25px'
+        this.handle_y = `${-200 * rate}px`
+        this.handleWidth = '40px'
+        this.capsul_y = `${100 * rate}px`
+        this.capsulWidth = '25px'
+        this.pushHight = `${-150 * rate}px`
       } else {
-        this.handle_y = '-180px'
-        this.handle_width = '50px'
-        this.capsul_y = '-178px'
-        this.capsul_width = '30px'
+        this.handle_y = '-200px'
+        this.handleWidth = '50px'
+        this.capsul_y = '80px'
+        this.capsulWidth = '30px'
+        this.pushHight = '-150px'
       }
     },
   },
@@ -220,15 +189,10 @@ body {
 <style scoped>
 .logo {
   width: 50%;
-  max-width: 200px;
+  max-width: 300px;
 }
 .gacha-img {
   width: 400px;
-}
-.btn-effect {
-  animation: grow 4s linear infinite;
-  /* animation: blow 4s linear infinite; */
-  border-radius: 50%;
 }
 .sunlight div {
   position: absolute;
@@ -309,7 +273,7 @@ body {
 }
 .push {
   position: absolute;
-  transform: translate(50%, var(--capsul-y));
+  transform: translate(50%, var(--push));
   left: 50%;
 }
 
@@ -353,6 +317,11 @@ body {
   position: absolute;
   transform: translate(-50%, var(--capsul-y));
   left: 50%;
+}
+.light-up {
+  box-shadow: 0 0 10px #ffc, 0 0 20px #ffc, 0 0 30px #ff9, 0 0 40px #ff6, 0 0 70px #fc6, 0 0 80px #f99, 0 0 100px #ff96,
+    0 0 150px #ff96;
+  border-radius: 100px;
 }
 .capsule-motion {
   background-image: url('/capsule.png');

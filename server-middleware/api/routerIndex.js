@@ -45,17 +45,19 @@ router.get('/search', async (req, res, next) => {
 })
 router.post('/search-eatery', async (req, res, next) => {
   try {
-    const search_url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${
-      process.env.HOT_PEPPER_KEY
-    }&lat=${String(req.body.lat)}&lng=${String(req.body.lng)}&range=2${req.body.genre}`
+    const search_url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.HOT_PEPPER_KEY}&lat=${req.body.lat}&lng=${req.body.lng}&range=2${req.body.genre}`
     const { data } = await axios.get(search_url)
     xml2js.parseString(data, (err, result) => {
       if (typeof result.results.shop === 'undefined') {
-        res.status(200).json({ data: false })
+        res.status(200).json({ status: false })
       } else {
-        console.log(result.results.shop.length)
         const num = Math.floor(Math.random() * result.results.shop.length)
-        res.status(200).json({ data: result.results.shop[num].name })
+        res.status(200).json({
+          status: true,
+          name: result.results.shop[num].name[0],
+          lat: result.results.shop[num].lat[0],
+          lng: result.results.shop[num].lng[0],
+        })
       }
     })
   } catch (err) {

@@ -1,6 +1,8 @@
 export const state = () => ({
   // $store.state.name
   name: '',
+  lat: null,
+  lng: null,
 })
 export const getters = {
   //$store.getters["computed"]
@@ -11,7 +13,9 @@ export const getters = {
 export const mutations = {
   //$store.commit("mutation")
   mutation(state, payload) {
-    state.name = payload.data
+    state.name = payload.name
+    state.lat = payload.lat
+    state.lng = payload.lng
   },
 }
 export const actions = {
