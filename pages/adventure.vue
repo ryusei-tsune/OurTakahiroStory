@@ -131,10 +131,25 @@ export default {
   beforeMount() {},
   mounted() {
     //coordinates読み込みまでに時間があるからwatchで同期処理させる
-    this.getStreatViewCordination()
+    this.getCurrentPosition()
   },
   beforeDestroy() {},
   methods: {
+    getCurrentPosition() {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.latitude = position.coords.latitude //現在緯度
+          this.longitude = position.coords.longitude //現在経度
+          // TODO：storeから目的地の習得（多分座標の方がいい）
+          this.getStreatViewCordination('調布駅')
+        },
+        (err) => {
+          this.isWatching = false
+          console.log(err)
+        },
+        { enableHighAccuracy: true }
+      )
+    },
     init() {
       //初期ストリートビュー準備
       this.checkpoint_count = this.coordinates.length
@@ -200,7 +215,6 @@ export default {
     },
     to_goalPage() {
       // 店名＋アニメーション画面に遷移するためのボタン関数
-      // TODO：下に最後のページのパス指定
       this.$router.push({ name: 'goal' })
     },
     setDistanceToCkpt(location1, location2) {
@@ -248,15 +262,14 @@ export default {
         this.angle_to_ckpt = fai
       }
     },
-    getStreatViewCordination() {
-      const origin = '東京駅'
-      const destination = '新宿駅'
+    getStreatViewCordination(destination_akki) {
+      const origin = new google.maps.LatLng(this.latitude, this.longitude)
       var directionsService = new google.maps.DirectionsService()
       var request = {
         // 開始地点
         origin: origin,
-        // 終了地点
-        destination: destination,
+        // 終了地点　TODO:座標の方がいい
+        destination: destination_akki,
         // 移動方法：徒歩
         travelMode: google.maps.DirectionsTravelMode.WALKING,
         // 残り距離の表示がキロメートルになる
@@ -299,10 +312,17 @@ export default {
             if (sum > splitDist * (cnt + 1)) {
               var lat = result.routes[0].legs[0].steps[i].lat_lngs[0].lat()
               var lng = result.routes[0].legs[0].steps[i].lat_lngs[0].lng()
-              this.coordinates.push({ lat: lat, lng: lng })
+              this.coordinates.unshift({ lat: lat, lng: lng })
               cnt++
             }
             i++
+          }
+          if (len !== this.coordinates.length) {
+            //目的地に一番近い場所を追加
+            //TODO:最後に目的地の座標を入れる
+            var lat = result.routes[0].legs[0].steps[len - 1].lat_lngs[0].lat()
+            var lng = result.routes[0].legs[0].steps[len - 1].lat_lngs[0].lng()
+            this.coordinates.unshift({ lat: lat, lng: lng })
           }
         }
       })
