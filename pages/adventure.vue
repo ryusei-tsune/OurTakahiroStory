@@ -1,6 +1,9 @@
 <template>
   <div class="bg-teal-600 flex flex-col h-screen justify-center items-center space-y-4">
     <div class="bg-yellow-500 text-center bg-opacity-100 w-10/12 p-4 border-yellow-400 border-4">
+      <p class="text-white font-bold text-2xl">名前 : {{this.store_name}}</p>
+      <p class="text-white font-bold text-2xl">緯度 : {{this.store_latitude}}</p>
+      <p class="text-white font-bold text-2xl">経度 : {{this.store_longitude}}</p>
       <p class="text-white font-bold text-2xl">お店が見つかるまで</p>
       <p class="text-white font-bold text-2xl">あと{{ this.checkpoint_count }}つ!</p>
     </div>
@@ -90,6 +93,9 @@ export default {
       checkpoint_count: 0,
       distance_to_ckpt: 0,
       angle_to_ckpt: 0,
+      store_name: "",
+      store_latitude: 0,
+      store_longitude: 0,
     }
   },
   watch: {
@@ -112,6 +118,9 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
+    this.store_name = window.localStorage.getItem("store_name")
+    this.store_latitude = window.localStorage.getItem("store_latitude")
+    this.store_longitude = window.localStorage.getItem("store_longitude")
     //TODO:ここであっきーの関数でcoordinatesに値代入する
     this.init()
   },
@@ -180,7 +189,8 @@ export default {
       // 店名＋アニメーション画面に遷移するためのボタン関数
       console.log('次のページへ')
       // TODO：下に最後のページのパス指定
-      // this.$router.push('/')
+      window.localStorage.setItem("store_name", this.store_name)
+      this.$router.push('/goal')
     },
     setDistanceToCkpt(location1, location2) {
       // チェックポイントまでの直線距離を現在地から計算する。(m単位)

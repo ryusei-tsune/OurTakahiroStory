@@ -17,6 +17,7 @@ export default {
     ],
     script: [
       { src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` }
+      { src: `https://maps.google.com/maps/api/js?v=3.33&key=${process.env.API_KEY}&libraries=places` }
     ]
   },
 
