@@ -1,28 +1,35 @@
 <template>
-  <div class="bg-teal-600 flex flex-col h-screen justify-center items-center space-y-4">
-    <div class="bg-yellow-500 text-center bg-opacity-100 w-10/12 p-4 border-yellow-400 border-4">
-      <p class="text-white font-bold text-2xl">お店が見つかるまで</p>
-      <p class="text-white font-bold text-2xl">あと{{ this.checkpoint_count }}つ!</p>
+  <div class="bg-[#69B3B7] flex flex-col justify-start items-center space-y-4 pt-3 pb-10 h-screen">
+    <div class="flex flex-row justify-center items-end space-x-1">
+      <p class="text-white font-medium text-lg">残り</p>
+      <p class="text-white font-medium text-4xl">{{ distance_to_ckpt }}</p>
+      <p class="text-white font-medium text-lg">m</p>
     </div>
-    <div class="flex flex-col justify-center items-center space-y-1 w-full">
-      <p class="text-white text-xl font-bold">＼ ここを見つけてみよう ／</p>
-      <div class="h-0 w-0" id="gmap"></div>
-      <div class="h-[50vh] w-10/12" id="gpano"></div>
+    <div class="bg-[#F2B816] text-center bg-opacity-100 w-80%] pt-3 pb-3 pl-3 pr-3 border-[#F9D10D] border-4">
+      <p class="text-white tracking-widest font-semibold text-3xl">お店まであと{{ checkpoint_count }}つ!</p>
     </div>
 
-    <div class="flex flex-row justify-center items-center space-x-5 w-full">
+    <div class="relative flex flex-col justify-center items-center space-y-1 w-full pt-6 pb-10">
+      <p class="text-white text-xl font-semibold pb-4">＼ この写真の場所を見つけよう ／</p>
+      <div class="absolute right-[-16px] top-[45px] z-[10000]">
+        <Compus v-bind:target_deg="angle_to_ckpt" />
+      </div>
+      <div class="h-0 w-0" id="gmap"></div>
+      <div class="h-[40vh] w-[90%]" id="gpano"></div>
+    </div>
+
+    <div class="flex flex-row justify-center items-center space-x-5 border-[#F2B816] border-4 rounded-full">
       <button
         v-if="isGoal"
         class="
-          bg-yellow-500
-          hover:bg-yellow-400
+          bg-[#F2B816]
           text-white
           font-bold
-          text-xl
-          py-10
-          px-4
+          text-lg
+          py-7
+          px-2
           rounded-full
-          border-yellow-400 border-4
+          border-[#F9D10D] border-4
           focus:shadow-outline
         "
         @click="to_goalPage()"
@@ -32,15 +39,14 @@
       <button
         v-else
         class="
-          bg-yellow-500
-          hover:bg-yellow-400
+          bg-[#F2B816]
           text-white
           font-bold
-          text-xl
-          py-10
-          px-4
+          text-lg
+          py-7
+          px-2
           rounded-full
-          border-yellow-400 border-4
+          border-[#F9D10D] border-4
           focus:shadow-outline
         "
         @click="getNextPosition()"
@@ -67,14 +73,19 @@
         目的地までの角度：<span>{{ this.angle_to_ckpt }}</span
         ><span>度</span>
       </p>
+      <p>
+        coordinate：<span>{{ this.coordinates }}</span
+        ><span>度</span>
+      </p>
     </div> -->
   </div>
 </template>
 <script>
+import Compus from '~/components/Compus.vue'
 export default {
   head() {},
   layout: 'default',
-  components: {},
+  components: { Compus },
   middleware: [],
   data() {
     return {
@@ -83,16 +94,14 @@ export default {
       longitude: 0,
       //（あっきーから）座標を入れるリスト coordinates
       coordinates: [
-        { lat: 34.3120297, lng: 135.5948249 },
-        { lat: 35.1790435, lng: 136.8768059 },
-        { lat: 35.182609, lng: 136.927285 },
+        // { lat: 34.3120297, lng: 135.5948249 },
+        // { lat: 35.1790435, lng: 136.8768059 },
+        // { lat: 35.182609, lng: 136.927285 },
+        // { lat: 35.652639, lng: 139.544025 },
       ],
       checkpoint_count: 0,
       distance_to_ckpt: 0,
       angle_to_ckpt: 0,
-      store_name: "",
-      store_latitude: 0,
-      store_longitude: 0,
     }
   },
   watch: {
@@ -106,6 +115,12 @@ export default {
         console.log('change_position', newVal)
       },
     },
+    coordinates: {
+      handler: function (newVal, oldVal) {
+        // coordinatesが追加されたらinitする
+        this.init()
+      },
+    },
   },
   computed: {
     google() {
@@ -115,11 +130,8 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    this.store_name = window.localStorage.getItem("store_name")
-    this.store_latitude = window.localStorage.getItem("store_latitude")
-    this.store_longitude = window.localStorage.getItem("store_longitude")
-    //TODO:ここであっきーの関数でcoordinatesに値代入する
-    this.init()
+    //coordinates読み込みまでに時間があるからwatchで同期処理させる
+    this.getStreatViewCordination()
   },
   beforeDestroy() {},
   methods: {
@@ -168,6 +180,10 @@ export default {
         linksControl: false,
         panControl: false,
         enableCloseButton: false,
+        motionTracking: false,
+        motionTrackingControl: false,
+        clickToGo: false,
+        zoomControl: false,
       })
       map.setStreetView(panorama)
     },
@@ -184,10 +200,8 @@ export default {
     },
     to_goalPage() {
       // 店名＋アニメーション画面に遷移するためのボタン関数
-      console.log('次のページへ')
       // TODO：下に最後のページのパス指定
-      window.localStorage.setItem("store_name", this.store_name)
-      this.$router.push('/goal')
+      this.$router.push({ name: 'goal' })
     },
     setDistanceToCkpt(location1, location2) {
       // チェックポイントまでの直線距離を現在地から計算する。(m単位)
@@ -213,15 +227,11 @@ export default {
       return (value * Math.PI) / 180
     },
     setAngleToCkpt(location_from, location_to) {
-      // TODO？
-      // ２点間の方角を求める (コンパスできたらいいな)
-      // 北:0度、東:90度、南:180度、西:270度
-      //　端末の角度とれる↓
-      // https://developer.mozilla.org/ja/docs/Web/Events/Detecting_device_orientation
-      var x1 = location_from.lat
-      var y1 = location_from.lng
-      var x2 = location_to.lat
-      var y2 = location_to.lng
+      //this.angle_to_ckpt:compusに目的地までの角度
+      var x1 = (location_from.lng * Math.PI) / 180
+      var y1 = (location_from.lat * Math.PI) / 180
+      var x2 = (location_to.lng * Math.PI) / 180
+      var y2 = (location_to.lat * Math.PI) / 180
       var delta_x = x2 - x1
       var r = 6378.137
       var d
@@ -231,78 +241,72 @@ export default {
       var a, b
       a = Math.sin(delta_x)
       b = Math.cos(y1) * Math.tan(y2) - Math.sin(y1) * Math.cos(delta_x)
-      fai = Math.atan2(b, a)
-      if (fai >= 0) {
-        this.angle_to_ckpt = Math.round((fai * 180.0) / Math.PI)
+      fai = (Math.atan2(a, b) * 180) / Math.PI
+      if (fai < 0) {
+        this.angle_to_ckpt = fai + 360
       } else {
-        this.angle_to_ckpt = Math.round(((fai + 2 * Math.PI) * 180.0) / Math.PI)
+        this.angle_to_ckpt = fai
       }
     },
-    // 引数としてやまりょうから店舗の位置情報を受け取る,google, origin, destination
     getStreatViewCordination() {
-      const origin = "東京駅"
-      const destination = "新宿駅"
+      const origin = '東京駅'
+      const destination = '新宿駅'
       var directionsService = new google.maps.DirectionsService()
       var request = {
-          // 開始地点
-          origin: origin,
-          // 終了地点
-          destination: destination,
-          // 移動方法：徒歩
-          travelMode: google.maps.DirectionsTravelMode.WALKING,
-          // 残り距離の表示がキロメートルになる
-          unitSystem: google.maps.DirectionsUnitSystem.METRIC,
-          // 
-          optimizeWaypoints: true,
+        // 開始地点
+        origin: origin,
+        // 終了地点
+        destination: destination,
+        // 移動方法：徒歩
+        travelMode: google.maps.DirectionsTravelMode.WALKING,
+        // 残り距離の表示がキロメートルになる
+        unitSystem: google.maps.DirectionsUnitSystem.METRIC,
+        //
+        optimizeWaypoints: true,
       }
-
       // requestを使ってルート検索
       directionsService.route(request, (result, status) => {
-          if (status == 'OK') {
-            // 総距離
-            var distanceText = result.routes[0].legs[0].distance.text.split(' ')
-            var distance = Number(distanceText[0])
-            // 距離に応じて取得する座標の数を決める
-            var n
-            if (distance < 0.1) {
-              n = 1
-            } else if (distance < 0.3){
-              n = 2
-            } else {
-              n = 3
-            }
-
-            // 次の写真までの距離
-            var splitDist = distance / (n + 1)
-
-            var sum = 0
-            var cnt = 0
-            var i = 0
-            var base = 0
-            var len = result.routes[0].legs[0].steps.length
-
-            while (cnt <= n && i < len) {
-              var tmp = result.routes[0].legs[0].steps[i].distance.text.split(' ')
-              // 距離の表記がmとkmの場合がある
-              if (tmp[1] == 'm') {
-                base = 1000
-              } else if (tmp[1] == 'km') {
-                base = 1
-              }
-              var number = Number(tmp[0])
-              sum += number / base
-
-              if (sum > splitDist * (cnt+1)) {
-                var lat = result.routes[0].legs[0].steps[i].lat_lngs[0].lat()
-                var lng = result.routes[0].legs[0].steps[i].lat_lngs[0].lng()
-                this.corArr.push({lat: lat, lng:lng})
-                cnt++
-              }
-              i++
-            }
+        if (status == 'OK') {
+          // 総距離
+          var distanceText = result.routes[0].legs[0].distance.text.split(' ')
+          var distance = Number(distanceText[0])
+          // 距離に応じて取得する座標の数を決める
+          var n
+          if (distance < 0.1) {
+            n = 1
+          } else if (distance < 0.3) {
+            n = 2
+          } else {
+            n = 3
           }
+          // 次の写真までの距離
+          var splitDist = distance / (n + 1)
+          var sum = 0
+          var cnt = 0
+          var i = 0
+          var base = 0
+          var len = result.routes[0].legs[0].steps.length
+          while (cnt <= n && i < len) {
+            var tmp = result.routes[0].legs[0].steps[i].distance.text.split(' ')
+            // 距離の表記がmとkmの場合がある
+            if (tmp[1] == 'm') {
+              base = 1000
+            } else if (tmp[1] == 'km') {
+              base = 1
+            }
+            var number = Number(tmp[0])
+            sum += number / base
+            if (sum > splitDist * (cnt + 1)) {
+              var lat = result.routes[0].legs[0].steps[i].lat_lngs[0].lat()
+              var lng = result.routes[0].legs[0].steps[i].lat_lngs[0].lng()
+              this.coordinates.push({ lat: lat, lng: lng })
+              cnt++
+            }
+            i++
+          }
+        }
       })
-  },
+    },
   },
 }
 </script>

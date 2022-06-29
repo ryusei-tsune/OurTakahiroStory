@@ -18,9 +18,9 @@ export default {
 
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     script: [
-      { src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` }
-      { src: `https://maps.google.com/maps/api/js?v=3.33&key=${process.env.API_KEY}&libraries=places` }
-    ]
+      { src: `https://maps.google.com/maps/api/js?key=${process.env.API_KEY}` },
+      { src: `https://maps.google.com/maps/api/js?v=3.33&key=${process.env.API_KEY}&libraries=places` },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css

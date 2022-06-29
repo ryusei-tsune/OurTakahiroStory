@@ -1,13 +1,18 @@
 <template>
   <div v-if="!error" class="relative flex flex-col justify-center items-center w-10/12">
     <div class="perspective_wrapper">
-      <div
+      <img
+        v-bind:style="{ transform: 'rotate3d(1,0,0,' + beta_rev + 'deg) rotate3d(0,0,1,' + heading_to_target + 'deg)' }"
+        src="/compus.png"
+        width="110px"
+        height="110px"
+      />
+      <!-- <div
         class="canvas-wrap bg-zinc-50 rounded-full border-slate-400 border-4"
         v-bind:style="{
           transform: 'rotate3d(1,0,0,' + beta_rev + 'deg)',
         }"
       >
-        <!-- コンパス -->
         <canvas
           id="canvas2"
           width="100"
@@ -16,7 +21,6 @@
             transform: 'rotate3d(0,0,1,-' + heading + 'deg)',
           }"
         ></canvas>
-        <!-- やじるし -->
         <canvas
           id="canvas"
           width="100"
@@ -25,16 +29,17 @@
             transform: 'rotate3d(0,0,1,' + heading_to_target + 'deg)',
           }"
         ></canvas>
-      </div>
+      </div> -->
     </div>
 
     <button
       v-if="!hasAccess"
-      class="absolute bottom-50b bg-zinc-50 w-[120px] h-[120px] rounded-full"
+      class="absolute bottom-50b bg-[#F2B816] text-white w-[90px] h-[90px] rounded-full border-[#F9D10D] border-4"
       @click="requestPermission"
     >
-      コンパスを使う
+      コンパスON！
     </button>
+
     <!-- 確認用　 -->
     <!-- <div class="bg-white txt-margin text-center">
       <p>
@@ -91,7 +96,7 @@ export default {
         {
           src: 'https://frogcat.github.io/canvas-arrow/canvas-arrow.js',
           callback: () => {
-            this.drawArrow()
+            // this.drawArrow()
           },
         },
       ],
@@ -167,7 +172,7 @@ export default {
           this.error = `Access ${permissionState}`
         }
       } catch {
-        this.error = 'ジャイロ機能がありません'
+        this.error = 'requestPermission Error'
       }
     },
     // デバイスの角度変わった時のイベント処理関数を追加
@@ -179,7 +184,7 @@ export default {
       } else {
         this.error = 'Device orientation not supported by your device'
       }
-      this.drawArrow()
+      // this.drawArrow()
     },
     //イベント処理
     //heading　:デバイスの方角(北0°)
@@ -195,9 +200,9 @@ export default {
         return
       }
       this.gamma = parseInt(event.gamma)
-      if (event.beta > 60) {
+      if (event.beta > 50) {
         // this.beta = 0
-        this.beta_rev = 60
+        this.beta_rev = 50
       } else if (event.beta < 0) {
         // this.beta = 80
         this.beta_rev = 0
