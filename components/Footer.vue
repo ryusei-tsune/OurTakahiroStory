@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center" style="font-size: 14px">
+  <div class="text-center" style="font-size: 14px; color: rgb(100, 100, 100)">
     Powered by <a href="http://webservice.recruit.co.jp/">ホットペッパー Webサービス</a>
   </div>
 </template>
