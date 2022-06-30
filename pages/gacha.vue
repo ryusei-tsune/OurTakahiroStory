@@ -6,7 +6,7 @@
       </div>
     </nuxt-link>
     <div class="text-white mt-0">＼ タップしてガチャを回してね！ ／</div>
-    <div v-if="isNone" class="text-red-600">指定したジャンルのお店が見つかりませんでした...</div>
+    <div v-if="isNone" class="text-red-600 text-center text-lg">指定したジャンルのお店が見つかりませんでした...</div>
     <div class="flex jsutify-center">
       <img src="/gacha.png" alt="" class="gacha-img mx-auto" />
     </div>
@@ -111,6 +111,7 @@ export default {
   methods: {
     async choice() {
       this.isHandle = true
+      this.isNone = false
       let genre_data = ''
       this.isSelected.forEach((element, index) => {
         if (element) {
@@ -146,7 +147,7 @@ export default {
               return resolve()
             }, 200)
           })
-          // this.$router.push('/adventure')
+          this.$router.push('/adventure')
         }, 1200)
       }
     },
