@@ -1,7 +1,7 @@
 export const state = () => ({
   // $store.state.name
-  name: '',
   currentPos: null,
+  name: '',
   goalPos: null,
 })
 export const getters = {

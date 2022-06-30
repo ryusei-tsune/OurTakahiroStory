@@ -266,7 +266,7 @@ export default {
     },
     getStreatViewCordination() {
       const origin = new google.maps.LatLng(this.latitude, this.longitude)
-      const des = new google.maps.LatLng(this.$store.state.lat, this.$store.state.lng)
+      const des = new google.maps.LatLng(this.$store.state.goalPos.lat, this.$store.state.goalPos.lng)
       var directionsService = new google.maps.DirectionsService()
       var request = {
         // 開始地点
