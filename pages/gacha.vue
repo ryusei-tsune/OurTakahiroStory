@@ -1,8 +1,10 @@
 <template>
   <div class="flex flex-col h-screen justify-center items-center space-y-4 my-2">
-    <div class="flex jsutify-center">
-      <img src="/logo.png" class="logo mx-auto mt-5" />
-    </div>
+    <nuxt-link to="/">
+      <div class="flex jsutify-center">
+        <img src="/logo.png" class="logo mx-auto mt-5" />
+      </div>
+    </nuxt-link>
     <div class="text-white text-xl mt-0">＼ タップしてガチャを回してね ／</div>
     <div v-if="isNone" class="text-red-600">指定したジャンルのお店が見つかりませんでした...</div>
     <div class="flex jsutify-center">
@@ -150,7 +152,7 @@ export default {
               return resolve()
             }, 200)
           })
-          this.$router.push('/adventure')
+          // this.$router.push('/adventure')
         }, 1200)
       }
     },
@@ -304,6 +306,10 @@ body {
   width: var(--handle-width);
   transform: translate(0, var(--handle-y));
 }
+.handle-img:hover {
+  cursor: pointer;
+  transform: translate(0, var(--handle-y)) scale(1.1);
+}
 @keyframes rotate {
   0% {
     transform: rotate(0);
@@ -373,6 +379,10 @@ body {
 .button-img {
   width: 50%;
   opacity: 0.5;
+}
+.button-img:hover {
+  cursor: pointer;
+  transform: scale(1.2);
 }
 .selected {
   opacity: 1;
