@@ -175,13 +175,13 @@ export default {
         const rate = this.width / 400
         this.handle_y = `${-200 * rate}px`
         this.handleWidth = '40px'
-        this.capsul_y = `${100 * rate}px`
+        this.capsul_y = `${430 * rate}px`
         this.capsulWidth = '25px'
         this.pushHight = `${-150 * rate}px`
       } else {
         this.handle_y = '-200px'
         this.handleWidth = '50px'
-        this.capsul_y = '80px'
+        this.capsul_y = '400px'
         this.capsulWidth = '30px'
         this.pushHight = '-150px'
       }
