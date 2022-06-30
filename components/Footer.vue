@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center footer">
+  <div class="text-center" style="font-size: 14px">
     Powered by <a href="http://webservice.recruit.co.jp/">ホットペッパー Webサービス</a>
   </div>
 </template>
@@ -32,9 +32,4 @@ export default {
 }
 </script>
 <style scoped>
-.footer {
-  position: absolute;
-  bottom: 1%;
-  font-size: 14px;
-}
 </style>

@@ -27,8 +27,8 @@
     <div class="m-auto justify-center flex">
       <div class="capsule"></div>
     </div>
-    <nuxt-link to="/" class="toTop text-xl text-center">
-      <div>Topへ</div>
+    <nuxt-link to="/" class="text-xl m-auto justify-center flex">
+      <span class="toTop">Topへ</span>
     </nuxt-link>
     <div class="flex justify-center">
       <Footer></Footer>
@@ -152,10 +152,6 @@ body {
   z-index: -1;
 }
 .toTop {
-  position: absolute;
-  bottom: 5%;
-  left: 50%;
-  transform: translate(-50%, 0);
   background-color: rgb(230, 230, 230);
   border: solid 3px #fc8dbb;
   border-radius: 10px;

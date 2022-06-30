@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col h-screen justify-center items-center space-y-4">
-    <div class="flex flex-col justify-center items-center space-y-1 w-full">
+  <div class="flex flex-col justify-start items-center space-y-4 pt-3 pb-10 h-screen">
+    <div class="flex justify-center items-center space-y-1 w-full">
       <img src="/logo.png" width="70%" style="max-width: 400px" />
     </div>
     <div class="flex flex-col justify-center items-center space-y-1 w-full text-center">

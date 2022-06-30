@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col h-screen justify-center items-center space-y-4 my-2">
+  <div class="flex flex-col justify-start items-center space-y-4 pt-3 pb-10 h-screen">
     <nuxt-link to="/">
       <div class="flex jsutify-center">
-        <img src="/logo.png" class="logo mx-auto mt-5" />
+        <img src="/logo.png" class="logo mx-auto" />
       </div>
     </nuxt-link>
     <div class="text-white text-xl mt-0">＼ タップしてガチャを回してね ／</div>
@@ -22,20 +22,18 @@
         <span class="material-symbols-outlined text-black"> question_mark </span>
       </div>
     </div>
-    <div class="max-w-lg">
-      <div class="grid grid-cols-4 gap-4" style="transform: translate(0, -100%)">
-        <div v-for="(item, index) in imgItems" :key="`img-item-${index}`">
-          <div class="flex justify-center items-center">
-            <img
-              :src="item.img"
-              alt=""
-              class="button-img"
-              @click="selectGenre(index)"
-              :class="{ ' selected': isSelected[index] }"
-            />
-          </div>
-          <div class="text-center">{{ item.type }}</div>
+    <div class="max-w-lg grid grid-cols-4 gap-4" style="transform: translate(0, -100%)">
+      <div v-for="(item, index) in imgItems" :key="`img-item-${index}`">
+        <div class="flex justify-center items-center">
+          <img
+            :src="item.img"
+            alt=""
+            class="button-img"
+            @click="selectGenre(index)"
+            :class="{ ' selected': isSelected[index] }"
+          />
         </div>
+        <div class="text-center">{{ item.type }}</div>
       </div>
     </div>
     <Footer></Footer>
@@ -152,7 +150,7 @@ export default {
               return resolve()
             }, 200)
           })
-          // this.$router.push('/adventure')
+          this.$router.push('/adventure')
         }, 1200)
       }
     },

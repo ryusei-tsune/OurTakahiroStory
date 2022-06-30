@@ -66,9 +66,9 @@ export default {
   server: {
     host: '0.0.0.0',
     port: process.env.PORT || 3000,
-    https: {
-      key: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.key.pem')),
-      cert: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.cert.pem')),
-    },
+    // https: {
+    //   key: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.key.pem')),
+    //   cert: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.cert.pem')),
+    // },
   },
 }
