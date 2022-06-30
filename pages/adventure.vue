@@ -78,14 +78,16 @@
         ><span>度</span>
       </p>
     </div> -->
+    <Footer></Footer>
   </div>
 </template>
 <script>
+import Footer from '../components/Footer.vue'
 import Compus from '~/components/Compus.vue'
 export default {
   head() {},
   layout: 'default',
-  components: { Compus },
+  components: { Compus, Footer },
   middleware: [],
   data() {
     return {

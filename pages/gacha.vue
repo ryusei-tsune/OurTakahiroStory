@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col justify-center items-center space-y-4 my-2">
+  <div class="flex flex-col h-screen justify-center items-center space-y-4 my-2">
     <div class="flex jsutify-center">
-      <img src="/logo.png" class="logo mx-auto" />
+      <img src="/logo.png" class="logo mx-auto mt-5" />
     </div>
     <div class="text-white text-xl mt-0">＼ タップしてガチャを回してね ／</div>
     <div v-if="isNone" class="text-red-600">指定したジャンルのお店が見つかりませんでした...</div>
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="max-w-lg">
-      <div class="grid grid-cols-4 gap-4" style="transform: translate(0, -50%)">
+      <div class="grid grid-cols-4 gap-4" style="transform: translate(0, -100%)">
         <div v-for="(item, index) in imgItems" :key="`img-item-${index}`">
           <div class="flex justify-center items-center">
             <img
@@ -36,10 +36,12 @@
         </div>
       </div>
     </div>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
+import Footer from '../components/Footer.vue'
 export default {
   head() {
     return {
@@ -47,7 +49,9 @@ export default {
     }
   },
   layout: 'default',
-  components: {},
+  components: {
+    Footer,
+  },
   middleware: [],
   data() {
     return {
@@ -63,8 +67,6 @@ export default {
       capsulWidth: '50px',
       pushHight: '-200px',
       corArr: [],
-      latitude: 0,
-      longitude: 0,
       imgItems: [
         { img: '/any.png', type: 'なんでも' },
         { img: '/japanese.png', type: '日本食' },
@@ -98,8 +100,7 @@ export default {
     navigator.geolocation.watchPosition(
       (position) => {
         const location = position.coords
-        this.latitude = location.latitude
-        this.longitude = location.longitude
+        this.$store.commit('currentPos', { lat: location.latitude, lng: location.longitude })
       },
       (err) => {
         this.isWatching = false
@@ -125,22 +126,21 @@ export default {
         }
       })
 
-      const post_data = { genre: genre_data, lat: this.latitude, lng: this.longitude }
+      const post_data = {
+        genre: genre_data,
+        lat: this.$store.state.currentPos.lat,
+        lng: this.$store.state.currentPos.lng,
+      }
       const { data } = await this.$axios.post('/api/search-eatery', post_data)
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          return resolve()
+        }, 3200)
+      })
       if (!data.status) {
-        await new Promise((resolve) => {
-          setTimeout(() => {
-            return resolve()
-          }, 3200)
-        })
         this.isNone = true
         this.isHandle = false
       } else {
-        await new Promise((resolve) => {
-          setTimeout(() => {
-            return resolve()
-          }, 3200)
-        })
         this.isGacha = true
         setTimeout(async () => {
           this.isLight = true
@@ -175,13 +175,13 @@ export default {
         const rate = this.width / 400
         this.handle_y = `${-200 * rate}px`
         this.handleWidth = '40px'
-        this.capsul_y = `${80 * rate}px`
+        this.capsul_y = `${100 * rate}px`
         this.capsulWidth = '25px'
         this.pushHight = `${-150 * rate}px`
       } else {
         this.handle_y = '-200px'
         this.handleWidth = '50px'
-        this.capsul_y = '70px'
+        this.capsul_y = '80px'
         this.capsulWidth = '30px'
         this.pushHight = '-150px'
       }
@@ -218,7 +218,7 @@ body {
   height: 5px;
   background: #00bbff;
   border-radius: 100%;
-  animation: blow 4s linear infinite;
+  animation: blow 3s linear infinite;
 }
 
 .sunlight div:nth-child(1) {

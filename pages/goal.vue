@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <div style="padding-top: 100px">
       <div
         class="
@@ -27,9 +27,16 @@
     <div class="m-auto justify-center flex">
       <div class="capsule"></div>
     </div>
+    <nuxt-link to="/" class="toTop text-xl text-center">
+      <div>Topへ</div>
+    </nuxt-link>
+    <div class="flex justify-center">
+      <Footer></Footer>
+    </div>
   </div>
 </template>
 <script>
+import Footer from '../components/Footer.vue'
 export default {
   head() {
     return {
@@ -37,7 +44,9 @@ export default {
     }
   },
   layout: 'default',
-  components: {},
+  components: {
+    Footer,
+  },
   middleware: [],
   data() {
     return {
@@ -75,21 +84,23 @@ body {
 <style scoped>
 .destination {
   font-weight: bold;
-  font-size: 35px;
+  font-size: 30px;
   animation: fade-in 2s 0s forwards;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.5), 0 0 40px rgba(52, 152, 219, 1),
+    0 0 50px rgba(52, 152, 219, 1), 0 0 60px rgba(52, 152, 219, 1), 0 0 70px rgba(52, 152, 219, 1);
 }
 @keyframes fade-in {
   0% {
     opacity: 0;
-    transform: scale(0) translate(0, 50%);
+    transform: scale(0) translate(0, 75%);
   }
   90% {
     opacity: 0.1;
-    transform: scale(0.1) translate(0, 50%);
+    transform: scale(0.1) translate(0, 75%);
   }
   100% {
     opacity: 1;
-    transform: scale(1) translate(0, 50%);
+    transform: scale(1) translate(0, 75%);
   }
 }
 .bg {
@@ -130,7 +141,7 @@ body {
   }
 }
 .capsule {
-  transform: translate(0, 20%);
+  transform: translate(0, 10%);
   background-image: url('/capsule-open.png');
   background-size: 100%;
   background-repeat: no-repeat;
@@ -138,5 +149,20 @@ body {
   width: 100%;
   max-width: 500px;
   height: 300px;
+  z-index: -1;
+}
+.toTop {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background-color: rgb(230, 230, 230);
+  border: solid 3px #fc8dbb;
+  border-radius: 10px;
+  padding: 0.5em 1em;
+  margin: 1em 0;
+}
+.toTop:hover {
+  background-color: #f2b816;
 }
 </style>
