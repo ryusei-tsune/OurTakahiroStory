@@ -34,7 +34,7 @@ router.get('/genre', async (req, res, next) => {
 
 router.post('/search-eatery', async (req, res, next) => {
   try {
-    const search_url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.HOT_PEPPER_KEY}&lat=${req.body.lat}&lng=${req.body.lng}&range=2${req.body.genre}`
+    const search_url = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.HOT_PEPPER_KEY}&lat=${req.body.lat}&lng=${req.body.lng}&range=2${req.body.genre}`
     const { data } = await axios.get(search_url)
     xml2js.parseString(data, (err, result) => {
       if (typeof result.results.shop === 'undefined') {

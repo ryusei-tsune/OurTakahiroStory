@@ -20,15 +20,18 @@
     </div>
     <div class="bg" :style="{ height: imgHeight }" />
     <div class="text-white text-center destination">
-      <div>
+      <div class="text-[#EF6CA8]" style="text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff">
         {{ name }}
       </div>
     </div>
     <div class="m-auto justify-center flex">
       <div class="capsule"></div>
     </div>
-    <nuxt-link to="/" class="text-xl m-auto justify-center flex">
-      <span class="toTop">Topへ</span>
+    <nuxt-link to="/">
+      <div class="flex justify-center">
+        <div class="toTop"></div>
+      </div>
+      <div class="text-center text-white" style="position: relative; transform: translate(0, -60px)">Topへ</div>
     </nuxt-link>
     <div class="flex justify-center">
       <Footer></Footer>
@@ -77,6 +80,10 @@ export default {
 }
 </script>
 <style>
+html {
+  font-family: 'Yu Gothic Bold', '游ゴシック Bold', YuGothic, '游ゴシック体', 'ヒラギノ角ゴ Pro W3', 'メイリオ',
+    sans-serif;
+}
 body {
   background-color: #69b3b7;
 }
@@ -86,17 +93,15 @@ body {
   font-weight: bold;
   font-size: 30px;
   animation: fade-in 2s 0s forwards;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.5), 0 0 40px rgba(52, 152, 219, 1),
-    0 0 50px rgba(52, 152, 219, 1), 0 0 60px rgba(52, 152, 219, 1), 0 0 70px rgba(52, 152, 219, 1);
 }
 @keyframes fade-in {
   0% {
     opacity: 0;
-    transform: scale(0) translate(0, 75%);
+    transform: scale(0.8) translate(0, 130%);
   }
   90% {
-    opacity: 0.1;
-    transform: scale(0.1) translate(0, 75%);
+    opacity: 0;
+    transform: scale(0.9) translate(0, 120%);
   }
   100% {
     opacity: 1;
@@ -113,10 +118,10 @@ body {
 
   width: 100vw;
   min-height: 100vh;
-  background-image: url('/confetti.png');
+  background-image: url('/paper.png');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: 100%;
   opacity: 1;
   -webkit-animation: anime 9s 0s 1;
   animation: anime 9s 0s 1;
@@ -152,13 +157,11 @@ body {
   z-index: -1;
 }
 .toTop {
-  background-color: rgb(230, 230, 230);
-  border: solid 3px #fc8dbb;
-  border-radius: 10px;
-  padding: 0.5em 1em;
-  margin: 1em 0;
-}
-.toTop:hover {
-  background-color: #f2b816;
+  background-image: url('/yellow.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100px;
+  height: 100px;
 }
 </style>

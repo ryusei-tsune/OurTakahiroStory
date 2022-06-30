@@ -5,7 +5,7 @@
         <img src="/logo.png" class="logo mx-auto" />
       </div>
     </nuxt-link>
-    <div class="text-white text-xl mt-0">＼ タップしてガチャを回してね ／</div>
+    <div class="text-white mt-0">＼ タップしてガチャを回してね！ ／</div>
     <div v-if="isNone" class="text-red-600">指定したジャンルのお店が見つかりませんでした...</div>
     <div class="flex jsutify-center">
       <img src="/gacha.png" alt="" class="gacha-img mx-auto" />
@@ -15,14 +15,13 @@
         <img src="/handle.png" alt="" :class="{ 'handle-motion': isHandle }" @click="choice()" />
         <div v-for="i in 12" :key="`sunlight-item${i}`"></div>
       </div>
-      <div class="push" v-if="!isHandle"><span class="material-symbols-outlined"> north_west </span>押してね！</div>
     </div>
     <div v-if="isGacha" class="gacha-capsul" :style="translate">
-      <div class="capsule-motion flex justify-center text-white" :class="{ 'light-up': isLight }">
-        <span class="material-symbols-outlined text-black"> question_mark </span>
+      <div class="capsule-motion flex justify-center text-white">
+        <div class="question"></div>
       </div>
     </div>
-    <div class="max-w-lg grid grid-cols-4 gap-4" style="transform: translate(0, -100%)">
+    <div class="max-w-lg grid grid-cols-4 gap-4 mx-2" style="transform: translate(0, -50%)">
       <div v-for="(item, index) in imgItems" :key="`img-item-${index}`">
         <div class="flex justify-center items-center">
           <img
@@ -33,7 +32,7 @@
             :class="{ ' selected': isSelected[index] }"
           />
         </div>
-        <div class="text-center">{{ item.type }}</div>
+        <div class="text-center text-white">{{ item.type }}</div>
       </div>
     </div>
     <Footer></Footer>
@@ -57,7 +56,6 @@ export default {
     return {
       isHandle: false,
       isGacha: false,
-      isLight: false,
       isNone: false,
       width: window.innerWidth,
       height: window.innerHeight,
@@ -65,7 +63,6 @@ export default {
       handleWidth: '50px',
       capsul_y: '-180px',
       capsulWidth: '50px',
-      pushHight: '-200px',
       corArr: [],
       imgItems: [
         { img: '/any.png', type: 'なんでも' },
@@ -85,7 +82,6 @@ export default {
         '--handle-width': this.handleWidth,
         '--capsul-y': this.capsul_y,
         '--capsul-width': this.capsulWidth,
-        '--push': this.pushHight,
       }
     },
     google() {
@@ -150,13 +146,13 @@ export default {
               return resolve()
             }, 200)
           })
-          this.$router.push('/adventure')
+          // this.$router.push('/adventure')
         }, 1200)
       }
     },
     selectGenre(index) {
       if (index === 0) {
-        this.$set(this.isSelected, index, !this.isSelected[index])
+        this.$set(this.isSelected, index, true)
         for (let i = 1; i < 4; i++) {
           this.$set(this.isSelected, i, false)
         }
@@ -173,23 +169,26 @@ export default {
       this.height = window.innerHeight
       if (this.width < 400) {
         const rate = this.width / 400
+        const diff = 400 - this.width
         this.handle_y = `${-200 * rate}px`
         this.handleWidth = '40px'
-        this.capsul_y = `${430 * rate}px`
+        this.capsul_y = `${405 - diff * rate}px`
         this.capsulWidth = '25px'
-        this.pushHight = `${-150 * rate}px`
       } else {
         this.handle_y = '-200px'
         this.handleWidth = '50px'
-        this.capsul_y = '400px'
+        this.capsul_y = '395px'
         this.capsulWidth = '30px'
-        this.pushHight = '-150px'
       }
     },
   },
 }
 </script>
 <style>
+html {
+  font-family: 'Yu Gothic Bold', '游ゴシック Bold', YuGothic, '游ゴシック体', 'ヒラギノ角ゴ Pro W3', 'メイリオ',
+    sans-serif;
+}
 body {
   background-color: #69b3b7;
 }
@@ -216,7 +215,7 @@ body {
   left: 30px;
   width: 10px;
   height: 5px;
-  background: #00bbff;
+  background: #ef6ca8;
   border-radius: 100%;
   animation: blow 3s linear infinite;
 }
@@ -279,11 +278,6 @@ body {
     width: 5px;
   }
 }
-.push {
-  position: absolute;
-  transform: translate(50%, var(--push));
-  left: 50%;
-}
 
 @keyframes rotate {
   0% {
@@ -303,10 +297,6 @@ body {
   position: relative;
   width: var(--handle-width);
   transform: translate(0, var(--handle-y));
-}
-.handle-img:hover {
-  cursor: pointer;
-  transform: translate(0, var(--handle-y)) scale(1.1);
 }
 @keyframes rotate {
   0% {
@@ -329,11 +319,6 @@ body {
   position: absolute;
   transform: translate(-50%, var(--capsul-y));
   left: 50%;
-}
-.light-up {
-  box-shadow: 0 0 10px #ffc, 0 0 20px #ffc, 0 0 30px #ff9, 0 0 40px #ff6, 0 0 70px #fc6, 0 0 80px #f99, 0 0 100px #ff96,
-    0 0 150px #ff96;
-  border-radius: 100px;
 }
 .capsule-motion {
   background-image: url('/capsule.png');
@@ -375,14 +360,19 @@ body {
   }
 }
 .button-img {
-  width: 50%;
+  width: 100%;
   opacity: 0.5;
-}
-.button-img:hover {
-  cursor: pointer;
-  transform: scale(1.2);
 }
 .selected {
   opacity: 1;
+}
+.question {
+  background-image: url('/question.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 20px;
+  height: auto;
+  z-index: 2;
 }
 </style>

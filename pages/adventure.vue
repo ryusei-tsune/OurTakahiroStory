@@ -334,6 +334,10 @@ export default {
 }
 </script>
 <style>
+html {
+  font-family: 'Yu Gothic Bold', '游ゴシック Bold', YuGothic, '游ゴシック体', 'ヒラギノ角ゴ Pro W3', 'メイリオ',
+    sans-serif;
+}
 body {
   background-color: #69b3b7;
 }

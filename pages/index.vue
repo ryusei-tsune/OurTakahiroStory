@@ -4,33 +4,17 @@
       <img src="/logo.png" width="70%" style="max-width: 400px" />
     </div>
     <div class="flex flex-col justify-center items-center space-y-1 w-full text-center">
-      <p class="text-white text-2xl font-bold">友達と「この後ご飯に行こう！」となった時</p>
-      <p class="text-white text-2xl font-bold">なかなかお店が決まらずに</p>
-      <p class="text-white text-2xl font-bold">困った経験はありませんか？<br /><br /></p>
-      <p class="text-white text-2xl font-bold">そんな時は "回してごはん" を使って</p>
-      <p class="text-white text-2xl font-bold">お店に向かう道中も楽しみながら</p>
-      <p class="text-white text-2xl font-bold">新しいお店を開拓しましょう！</p>
+      <p class="text-white" style="font-size: min(4.5vw, 24px)">友達と「この後ご飯に行こう！」となった時</p>
+      <p class="text-white" style="font-size: min(4.5vw, 24px)">なかなかお店が決まらずに</p>
+      <p class="text-white" style="font-size: min(4.5vw, 24px)">困った経験はありませんか？<br /><br /></p>
+      <p class="text-white" style="font-size: min(4.5vw, 24px)">そんな時は "まわしてごはん" を使って</p>
+      <p class="text-white" style="font-size: min(4.5vw, 24px)">お店に向かう道中も楽しみながら</p>
+      <p class="text-white" style="font-size: min(4.5vw, 24px)">新しいお店を開拓しましょう！</p>
     </div>
-    <div class="flex flex-row justify-center items-center space-x-5 w-full">
-      <nuxt-link to="/gacha">
-        <button
-          class="
-            bg-[#F2B816]
-            //hover:bg-yellow-400
-            text-white
-            font-bold
-            text-xl
-            py-10
-            px-4
-            rounded-full
-            border-[#F9D10D] border-4
-            focus:shadow-outline
-          "
-        >
-          はじめる
-        </button>
-      </nuxt-link>
-    </div>
+    <nuxt-link to="/gacha" class="flex justify-center flex-col">
+      <div class="startButton"></div>
+      <div class="text-center text-white" style="position: relative; transform: translate(0, -60px)">はじめる</div>
+    </nuxt-link>
     <Footer></Footer>
   </div>
 </template>
@@ -61,9 +45,21 @@ export default {
 }
 </script>
 <style>
+html {
+  font-family: 'Yu Gothic Bold', '游ゴシック Bold', YuGothic, '游ゴシック体', 'ヒラギノ角ゴ Pro W3', 'メイリオ',
+    sans-serif;
+}
 body {
   background-color: #69b3b7;
 }
 </style>
 <style scoped>
+.startButton {
+  background-image: url('/yellow.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100px;
+  height: 100px;
+}
 </style>
