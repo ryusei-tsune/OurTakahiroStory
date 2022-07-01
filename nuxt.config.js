@@ -48,6 +48,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/pwa',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -70,5 +71,20 @@ export default {
       key: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.key.pem')),
       cert: fs.readFileSync(path.resolve('./static/ssl_cert/', 'https_server.cert.pem')),
     },
+  },
+  manifest: {
+    name: 'まわしてごはん',
+    lang: 'ja',
+    short_name: 'まわしてごはん',
+    title: 'まわしてごはん',
+    'og:title': 'まわしてごはん',
+    description: `「まわしてごはん」は友人とご飯に行く時になかなかお店が決まらないという課題を、
+      お店をランダムに提案することで解決するサービスです。またこのサービスの特徴として、
+      ヒントとなる写真をたどりながらお店に向かうため、到着するまでどこに向かっているかわからないドキドキ感を味わうことができます。`,
+    'og:description': `「まわしてごはん」は友人とご飯に行く時になかなかお店が決まらないという課題を、
+      お店をランダムに提案することで解決するサービスです。またこのサービスの特徴として、
+      ヒントとなる写真をたどりながらお店に向かうため、到着するまでどこに向かっているかわからないドキドキ感を味わうことができます。`,
+    theme_color: '#69b3b7',
+    background_color: '#69b3b7',
   },
 }

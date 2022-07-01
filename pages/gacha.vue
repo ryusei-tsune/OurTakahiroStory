@@ -140,7 +140,6 @@ export default {
         if (!data.status) {
           this.isNone = true
           this.isHandle = false
-
           this.message = '指定したジャンルのお店が見つかりませんでした...'
         } else {
           this.isGacha = true
