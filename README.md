@@ -77,3 +77,17 @@ npm run dev 後にスマホからアクセスするとコンパスが使える�
 ### ホットペッパー API の利用
 
 ホットペッパー API を利用するため[事前に登録](https://webservice.recruit.co.jp/register)が必要．登録後取得した API キーを.env ファイルに追加(`HOT_PEPPER_KEY=(APIキー)`）
+
+<br>
+<br>
+
+### デプロイ
+
+[zerossl](https://zerossl.com/)なら無料枠（期限 90 日）で IP
+の ssl 証明書が作れるので/nginx/ssl_cert/に private.key と certificate.cert を置く。  
+(ドメイン使うなら certbot で ssl 証明書生成して自動更新する方が楽)  
+client⇆https⇆nginx⇆http⇆node_server  
+client 側からの通信の際に nginx をリバースプロキシにするだけで簡単に https 通信ができる。
+あとは docker-compose up するだけ。  
+レンタサバでも自サバでも 443 ポート解放は忘れずに行うこと。  
+[nginx の特徴](https://t.co/xkYacRREmj)

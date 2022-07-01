@@ -20,3 +20,14 @@ services:
       - ${PORT:-3000}:${PORT:-3000}
     volumes:
       - ./:/home/node/app
+
+  proxy:
+    build: ./nginx
+    volumes:
+      - ./nginx:/nginx
+    ports:
+      - 443:443
+    links:
+      - 'node'
+    depends_on:
+      - node
