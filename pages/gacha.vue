@@ -147,7 +147,7 @@ export default {
               return resolve()
             }, 200)
           })
-          // this.$router.push('/adventure')
+          this.$router.push('/adventure')
         }, 1200)
       }
     },
