@@ -92,8 +92,8 @@ export default {
   data() {
     return {
       isGoal: false,
-      latitude: 0,
-      longitude: 0,
+      latitude: this.$store.state.currentPos.lat,
+      longitude: this.$store.state.currentPos.lng,
       //（あっきーから）座標を入れるリスト coordinates
       coordinates: [
         // { lat: 34.3120297, lng: 135.5948249 },
@@ -132,26 +132,10 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    //coordinates読み込みまでに時間があるからwatchで同期処理させる
-    this.getCurrentPosition()
+    this.getStreatViewCordination()
   },
   beforeDestroy() {},
   methods: {
-    getCurrentPosition() {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.latitude = position.coords.latitude //現在緯度
-          this.longitude = position.coords.longitude //現在経度
-          // TODO：storeから目的地の習得（多分座標の方がいい）
-          this.getStreatViewCordination()
-        },
-        (err) => {
-          this.isWatching = false
-          console.log(err)
-        },
-        { enableHighAccuracy: true }
-      )
-    },
     init() {
       //初期ストリートビュー準備
       this.checkpoint_count = this.coordinates.length
@@ -265,7 +249,7 @@ export default {
       }
     },
     getStreatViewCordination() {
-      const origin = new google.maps.LatLng(this.latitude, this.longitude)
+      const origin = new google.maps.LatLng(this.$store.state.currentPos.lat, this.$store.state.currentPos.lng)
       const des = new google.maps.LatLng(this.$store.state.goalPos.lat, this.$store.state.goalPos.lng)
       var directionsService = new google.maps.DirectionsService()
       var request = {
@@ -313,20 +297,23 @@ export default {
             var number = Number(tmp[0])
             sum += number / base
             if (sum > splitDist * (cnt + 1)) {
-              var lat = result.routes[0].legs[0].steps[i].lat_lngs[0].lat()
-              var lng = result.routes[0].legs[0].steps[i].lat_lngs[0].lng()
+              //pathの指定の方が店の近くまで案内してくれそう
+              var tmp_len = result.routes[0].legs[0].steps[i].path.length
+              var lat = result.routes[0].legs[0].steps[i].path[tmp_len - 1].lat()
+              var lng = result.routes[0].legs[0].steps[i].path[tmp_len - 1].lng()
               this.coordinates.unshift({ lat: lat, lng: lng })
               cnt++
             }
             i++
           }
-          if (len !== this.coordinates.length) {
-            //目的地に一番近い場所を追加
-            //TODO:最後に目的地の座標を入れる
-            var lat = result.routes[0].legs[0].steps[len - 1].lat_lngs[0].lat()
-            var lng = result.routes[0].legs[0].steps[len - 1].lat_lngs[0].lng()
-            this.coordinates.unshift({ lat: lat, lng: lng })
-          }
+          // console.log(result.routes[0].legs[0].steps)
+          // if (len !== this.coordinates.length) {
+          //   //目的地に一番近い場所を追加
+          //   //最後に目的地の座標を入れるとストリートビューないところがある
+          //   var lat = result.routes[0].legs[0].steps[len - 1].lat_lngs[0].lat()
+          //   var lng = result.routes[0].legs[0].steps[len - 1].lat_lngs[0].lng()
+          //   this.coordinates.unshift({ lat: lat, lng: lng })
+          // }
         }
       })
     },
