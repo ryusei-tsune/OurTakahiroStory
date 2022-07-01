@@ -267,4 +267,11 @@ export default {
   padding: 0;
   margin: 0;
 }
+html {
+  font-family: '游ゴシック体', YuGothic, '游ゴシック', 'Yu Gothic', sans-serif;
+  font-weight: bold;
+}
+body {
+  background-color: #69b3b7;
+}
 </style>
