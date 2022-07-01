@@ -46,7 +46,8 @@ export default {
 </script>
 <style>
 html {
-  font-family: 'Yu Gothic Bold', '游ゴシック Bold', YuGothic, '游ゴシック体', sans-serif;
+  font-family: '游ゴシック体', YuGothic, '游ゴシック', 'Yu Gothic', sans-serif;
+  font-weight: bold;
 }
 body {
   background-color: #69b3b7;

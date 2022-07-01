@@ -6,7 +6,9 @@
       </div>
     </nuxt-link>
     <div class="text-white mt-0">＼ タップしてガチャを回してね！ ／</div>
-    <div v-if="isNone" class="text-red-600 text-center text-lg">指定したジャンルのお店が見つかりませんでした...</div>
+    <div v-if="isNone" class="text-red-600 text-center text-lg" style="font-size: min(4vw, 16px)">
+      指定したジャンルのお店が見つかりませんでした...
+    </div>
     <div class="flex jsutify-center">
       <img src="/gacha.png" alt="" class="gacha-img mx-auto" />
     </div>
@@ -187,7 +189,8 @@ export default {
 </script>
 <style>
 html {
-  font-family: 'Yu Gothic Bold', '游ゴシック Bold', YuGothic, '游ゴシック体', sans-serif;
+  font-family: '游ゴシック体', YuGothic, '游ゴシック', 'Yu Gothic', sans-serif;
+  font-weight: bold;
 }
 body {
   background-color: #69b3b7;
