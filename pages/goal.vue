@@ -96,11 +96,10 @@ body {
 @keyframes fade-in {
   0% {
     opacity: 0;
-    transform: scale(0.8) translate(0, 130%);
   }
   90% {
     opacity: 0;
-    transform: scale(0.9) translate(0, 120%);
+    transform: scale(0.5) translate(0, 500%);
   }
   100% {
     opacity: 1;

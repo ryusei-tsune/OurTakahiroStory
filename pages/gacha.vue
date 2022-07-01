@@ -147,7 +147,7 @@ export default {
               return resolve()
             }, 200)
           })
-          this.$router.push('/adventure')
+          // this.$router.push('/adventure')
         }, 1200)
       }
     },
@@ -160,7 +160,7 @@ export default {
       } else {
         this.$set(this.isSelected, 0, false)
         this.$set(this.isSelected, index, !this.isSelected[index])
-        if (this.isSelected.filter((value) => value == false).length === 4) {
+        if (this.isSelected.filter((value) => value === false).length === 4) {
           this.$set(this.isSelected, 0, true)
         }
       }
