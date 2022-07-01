@@ -7,7 +7,7 @@
     </nuxt-link>
     <div class="text-white mt-0">＼ タップしてガチャを回してね！ ／</div>
     <div v-if="isNone" class="text-red-600 text-center text-lg" style="font-size: min(4vw, 16px)">
-      指定したジャンルのお店が見つかりませんでした...
+      {{ message }}
     </div>
     <div class="flex jsutify-center">
       <img src="/gacha.png" alt="" class="gacha-img mx-auto" />
@@ -74,6 +74,7 @@ export default {
       ],
       isSelected: [true, false, false, false],
       genre_code: ['G004', 'G005', 'G007'],
+      message: '',
     }
   },
   watch: {},
@@ -124,33 +125,45 @@ export default {
           }
         }
       })
+      if (this.$store.state.currentPos != null) {
+        const post_data = {
+          genre: genre_data,
+          lat: this.$store.state.currentPos.lat,
+          lng: this.$store.state.currentPos.lng,
+        }
+        const { data } = await this.$axios.post('/api/search-eatery', post_data)
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            return resolve()
+          }, 3200)
+        })
+        if (!data.status) {
+          this.isNone = true
+          this.isHandle = false
 
-      const post_data = {
-        genre: genre_data,
-        lat: this.$store.state.currentPos.lat,
-        lng: this.$store.state.currentPos.lng,
-      }
-      const { data } = await this.$axios.post('/api/search-eatery', post_data)
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          return resolve()
-        }, 3200)
-      })
-      if (!data.status) {
+          this.message = '指定したジャンルのお店が見つかりませんでした...'
+        } else {
+          this.isGacha = true
+          setTimeout(async () => {
+            this.isLight = true
+            this.$store.commit('mutation', { name: data.name, lat: data.lat, lng: data.lng })
+            await new Promise((resolve) => {
+              setTimeout(() => {
+                return resolve()
+              }, 200)
+            })
+            this.$router.push('/adventure')
+          }, 1200)
+        }
+      } else {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            return resolve()
+          }, 3200)
+        })
         this.isNone = true
         this.isHandle = false
-      } else {
-        this.isGacha = true
-        setTimeout(async () => {
-          this.isLight = true
-          this.$store.commit('mutation', { name: data.name, lat: data.lat, lng: data.lng })
-          await new Promise((resolve) => {
-            setTimeout(() => {
-              return resolve()
-            }, 200)
-          })
-          this.$router.push('/adventure')
-        }, 1200)
+        this.message = '位置情報を取得出来ていません!'
       }
     },
     selectGenre(index) {
