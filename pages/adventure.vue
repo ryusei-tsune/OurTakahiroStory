@@ -78,14 +78,16 @@
         ><span>度</span>
       </p>
     </div> -->
+    <Footer></Footer>
   </div>
 </template>
 <script>
+import Footer from '../components/Footer.vue'
 import Compus from '~/components/Compus.vue'
 export default {
   head() {},
   layout: 'default',
-  components: { Compus },
+  components: { Compus, Footer },
   middleware: [],
   data() {
     return {
@@ -264,7 +266,7 @@ export default {
     },
     getStreatViewCordination() {
       const origin = new google.maps.LatLng(this.latitude, this.longitude)
-      const des = new google.maps.LatLng(this.$store.state.lat, this.$store.state.lng)
+      const des = new google.maps.LatLng(this.$store.state.goalPos.lat, this.$store.state.goalPos.lng)
       var directionsService = new google.maps.DirectionsService()
       var request = {
         // 開始地点
@@ -331,5 +333,12 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style>
+html {
+  font-family: '游ゴシック体', YuGothic, '游ゴシック', 'Yu Gothic', sans-serif;
+  font-weight: bold;
+}
+body {
+  background-color: #69b3b7;
+}
 </style>

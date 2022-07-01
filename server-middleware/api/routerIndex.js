@@ -24,22 +24,31 @@ router.get('/genre', async (req, res, next) => {
     // G014 カフェ・スイーツ
     // G015 その他グルメ
     const { data } = await axios.get(genre_url)
-    console.log(data)
     xml2js.parseString(data, (err, result) => {
-      console.log(result)
       res.status(200).json({ data: result.results.genre })
     })
   } catch (err) {
-    console.log('error')
     res.status(400).end()
   }
 })
-router.get('/small-area', async (req, res, next) => {
+
+router.post('/search-eatery', async (req, res, next) => {
   try {
-    // const area_url = `http://webservice.recruit.co.jp/hotpepper/small_area/v1/?key=${process.env.HOT_PEPPER_KEY}`
-    const area_url = `http://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.HOT_PEPPER_KEY}&small_area=X609`
-    const { data } = await axios.get(area_url)
-    res.status(200).json(data)
+    const search_url = `https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=${process.env.HOT_PEPPER_KEY}&lat=${req.body.lat}&lng=${req.body.lng}&range=2${req.body.genre}`
+    const { data } = await axios.get(search_url)
+    xml2js.parseString(data, (err, result) => {
+      if (typeof result.results.shop === 'undefined') {
+        res.status(200).json({ status: false })
+      } else {
+        const num = Math.floor(Math.random() * result.results.shop.length)
+        res.status(200).json({
+          status: true,
+          name: result.results.shop[num].name[0],
+          lat: result.results.shop[num].lat[0],
+          lng: result.results.shop[num].lng[0],
+        })
+      }
+    })
   } catch (err) {
     res.status(400).end()
   }

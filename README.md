@@ -53,11 +53,17 @@ $ docker-compose down
 
 ## 補足
 
+### Google Maps Platform の利用
+
+Google Maps Platform の Maps JavaScript API を利用することで目的地までの経路等を取得する．API キーの取得に関する[参考記事](https://qiita.com/Haruka-Ogawa/items/997401a2edcd20e61037)．API キーを取得後，`.env` ファイルに追加(`API_KEY=(APIキー)`)
+
+<br>
+
 ### https サーバのための一時的な ssl 証明書の作り方
 
 デバイスのジャイロを習得するときに https が必須。
 
-```
+```bash
 openssl req -x509 -newkey rsa:4096 -sha256 \
 -nodes -keyout static/ssl_cert/https_server.key.pem \
 -out static/ssl_cert/https_server.cert.pem
@@ -65,3 +71,9 @@ openssl req -x509 -newkey rsa:4096 -sha256 \
 
 作成後は[二回目以降](#二回目以降)と同じ  
 npm run dev 後にスマホからアクセスするとコンパスが使える。[参考 url](https://bellbellbell.info/2020/08/check-local-env-from-smartphone/)
+
+<br>
+
+### ホットペッパー API の利用
+
+ホットペッパー API を利用するため[事前に登録](https://webservice.recruit.co.jp/register)が必要．登録後取得した API キーを.env ファイルに追加(`HOT_PEPPER_KEY=(APIキー)`）

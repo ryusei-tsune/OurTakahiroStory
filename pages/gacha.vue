@@ -1,27 +1,48 @@
 <template>
-  <div>
-    <div class="text-center text-5xl pt-10">
-      <span class="p-2" style="background-color: white"> 回してごはん </span>
+  <div class="flex flex-col justify-start items-center space-y-4 pt-3 pb-10 h-screen">
+    <nuxt-link to="/">
+      <div class="flex jsutify-center">
+        <img src="/logo.png" class="logo mx-auto" />
+      </div>
+    </nuxt-link>
+    <div class="text-white mt-0">＼ タップしてガチャを回してね！ ／</div>
+    <div v-if="isNone" class="text-red-600 text-center text-lg" style="font-size: min(4vw, 16px)">
+      {{ message }}
     </div>
     <div class="flex jsutify-center">
       <img src="/gacha.png" alt="" class="gacha-img mx-auto" />
     </div>
-    <div :style="translate">
-      <div class="handle-img mx-auto" :class="{ ' sunlight': !isHandle }">
+    <div :style="translate" class="flex jsutify-center">
+      <div class="handle-img" :class="{ ' sunlight': !isHandle }">
         <img src="/handle.png" alt="" :class="{ 'handle-motion': isHandle }" @click="choice()" />
         <div v-for="i in 12" :key="`sunlight-item${i}`"></div>
       </div>
-      <div class="push" v-if="!isHandle"><span class="material-symbols-outlined"> north_west </span>押してね！</div>
     </div>
-    <div v-if="isGacha" class="gacha-capsul mx-auto" :style="translate">
-      <div class="capsule-motion flex justify-center" :class="{ 'zoom-up': isScale }">
-        <span class="material-symbols-outlined"> question_mark </span>
+    <div v-if="isGacha" class="gacha-capsul" :style="translate">
+      <div class="capsule-motion flex justify-center text-white">
+        <div class="question"></div>
       </div>
     </div>
+    <div class="max-w-lg grid grid-cols-4 gap-4 mx-2" style="transform: translate(0, -50%)">
+      <div v-for="(item, index) in imgItems" :key="`img-item-${index}`">
+        <div class="flex justify-center items-center">
+          <img
+            :src="item.img"
+            alt=""
+            class="button-img"
+            @click="selectGenre(index)"
+            :class="{ ' selected': isSelected[index] }"
+          />
+        </div>
+        <div class="text-center text-white">{{ item.type }}</div>
+      </div>
+    </div>
+    <Footer></Footer>
   </div>
 </template>
 
 <script>
+import Footer from '../components/Footer.vue'
 export default {
   head() {
     return {
@@ -29,22 +50,31 @@ export default {
     }
   },
   layout: 'default',
-  components: {},
+  components: {
+    Footer,
+  },
   middleware: [],
   data() {
     return {
       isHandle: false,
       isGacha: false,
-      isScale: false,
+      isNone: false,
       width: window.innerWidth,
       height: window.innerHeight,
       handle_y: '-180px',
-      handle_width: '50px',
+      handleWidth: '50px',
       capsul_y: '-180px',
-      capsul_width: '50px',
+      capsulWidth: '50px',
       corArr: [],
-      latitude: 0,
-      longitude: 0,
+      imgItems: [
+        { img: '/any.png', type: 'なんでも' },
+        { img: '/japanese.png', type: '日本食' },
+        { img: '/western.png', type: '洋食' },
+        { img: 'chinese.png', type: '中華' },
+      ],
+      isSelected: [true, false, false, false],
+      genre_code: ['G004', 'G005', 'G007'],
+      message: '',
     }
   },
   watch: {},
@@ -52,9 +82,9 @@ export default {
     translate() {
       return {
         '--handle-y': this.handle_y,
-        '--handle-width': this.handle_width,
+        '--handle-width': this.handleWidth,
         '--capsul-y': this.capsul_y,
-        '--capsul-width': this.capsul_width,
+        '--capsul-width': this.capsulWidth,
       }
     },
     google() {
@@ -66,116 +96,125 @@ export default {
   mounted() {
     window.addEventListener('resize', this.windowResize)
     this.windowResize()
-    this.init()
-    this.$store.commit('mutation', { data: '胡白' })
+    navigator.geolocation.watchPosition(
+      (position) => {
+        const location = position.coords
+        this.$store.commit('currentPos', { lat: location.latitude, lng: location.longitude })
+      },
+      (err) => {
+        this.isWatching = false
+        console.log(err)
+      },
+      { enableHighAccuracy: true }
+    )
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.windowResize)
   },
   methods: {
-    init() {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.latitude = position.coords.latitude //現在緯度
-          this.longitude = position.coords.longitude //現在経度
-          const google = this.google
-          const map = new google.maps.Map(document.getElementById('gmap'), {
-            center: new google.maps.LatLng(this.latitude, this.longitude),
-            zoom: 15,
-          })
-        },
-        (err) => {
-          this.isWatching = false
-          console.log(err)
-        },
-        { enableHighAccuracy: true }
-      )
-    },
     async choice() {
-      // this.store_index = Math.floor(Math.random() * this.store_info.length)
-      // this.store_name = this.store_info[this.store_index].name
-      // this.store_latitude = this.store_info[this.store_index].geometry.location.lat()
-      // this.store_longitude = this.store_info[this.store_index].geometry.location.lng()
-      //console.log(this.store_name)
-      //console.log(this.store_latitude)
-      //console.log(this.store_longitude)
-      // window.localStorage.setItem('store_name', this.store_name) //名前(getItemで受け取る)
-      // window.localStorage.setItem('store_latitude', this.store_latitude) //緯度(getItemで受け取る)
-      // window.localStorage.setItem('store_longitude', this.store_longitude) //経度(getItemで受け取る)
       this.isHandle = true
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          return resolve()
-        }, 3200)
-      })
-      this.isGacha = true
-      setTimeout(() => {
-        this.isScale = true
-        console.log(this.isScale)
-        this.$router.push('/adventure')
-      }, 1200)
-    },
-    setStore() {
-      const google = this.google
-      const map = new google.maps.Map(document.getElementById('gmap'), {
-        //center: new google.maps.LatLng(this.latitude,this.longitude),
-        center: new google.maps.LatLng(35.6813092, 139.7677269), //東京駅
-        zoom: 15,
-      })
-
-      const placeService = new google.maps.places.PlacesService(map)
-
-      placeService.nearbySearch(
-        {
-          location: new google.maps.LatLng(35.6813092, 139.7677269), //東京駅
-          //location: new google.maps.LatLng(this.latitude,this.longitude),
-          radius: 500,
-          type: ['restaurant'],
-        },
-        (results, status) => {
-          if (status == google.maps.places.PlacesServiceStatus.OK) {
-            for (var i = 0; i < results.length; i++) {
-              var place = results[i]
-              this.store_info.push(place)
-            }
-            console.log(this.store_info)
+      this.isNone = false
+      let genre_data = ''
+      this.isSelected.forEach((element, index) => {
+        if (element) {
+          if (index === 0) {
+            genre_data += '&genre=G004&genre=G005&genre=G007'
+          } else {
+            genre_data += `&genre=${this.genre_code[index - 1]}`
           }
         }
-      )
+      })
+      if (this.$store.state.currentPos != null) {
+        const post_data = {
+          genre: genre_data,
+          lat: this.$store.state.currentPos.lat,
+          lng: this.$store.state.currentPos.lng,
+        }
+        const { data } = await this.$axios.post('/api/search-eatery', post_data)
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            return resolve()
+          }, 3200)
+        })
+        if (!data.status) {
+          this.isNone = true
+          this.isHandle = false
+          this.message = '指定したジャンルのお店が見つかりませんでした...'
+        } else {
+          this.isGacha = true
+          setTimeout(async () => {
+            this.isLight = true
+            this.$store.commit('mutation', { name: data.name, lat: data.lat, lng: data.lng })
+            await new Promise((resolve) => {
+              setTimeout(() => {
+                return resolve()
+              }, 200)
+            })
+            this.$router.push('/adventure')
+          }, 1200)
+        }
+      } else {
+        await new Promise((resolve) => {
+          setTimeout(() => {
+            return resolve()
+          }, 3200)
+        })
+        this.isNone = true
+        this.isHandle = false
+        this.message = '位置情報を取得出来ていません!'
+      }
     },
-    async turnOn() {},
+    selectGenre(index) {
+      if (index === 0) {
+        this.$set(this.isSelected, index, true)
+        for (let i = 1; i < 4; i++) {
+          this.$set(this.isSelected, i, false)
+        }
+      } else {
+        this.$set(this.isSelected, 0, false)
+        this.$set(this.isSelected, index, !this.isSelected[index])
+        if (this.isSelected.filter((value) => value === false).length === 4) {
+          this.$set(this.isSelected, 0, true)
+        }
+      }
+    },
     windowResize() {
       this.width = window.innerWidth
       this.height = window.innerHeight
       if (this.width < 400) {
         const rate = this.width / 400
-        this.handle_y = `${-180 * rate}px`
-        this.handle_width = '40px'
-        this.capsul_y = `${-170 * rate}px`
-        this.capsul_width = '25px'
+        const diff = 400 - this.width
+        this.handle_y = `${-200 * rate}px`
+        this.handleWidth = '40px'
+        this.capsul_y = `${405 - diff * rate}px`
+        this.capsulWidth = '25px'
       } else {
-        this.handle_y = '-180px'
-        this.handle_width = '50px'
-        this.capsul_y = '-178px'
-        this.capsul_width = '30px'
+        this.handle_y = '-200px'
+        this.handleWidth = '50px'
+        this.capsul_y = '395px'
+        this.capsulWidth = '30px'
       }
     },
   },
 }
 </script>
 <style>
+html {
+  font-family: '游ゴシック体', YuGothic, '游ゴシック', 'Yu Gothic', sans-serif;
+  font-weight: bold;
+}
 body {
-  background-color: rgb(100, 170, 180);
+  background-color: #69b3b7;
 }
 </style>
 <style scoped>
+.logo {
+  width: 50%;
+  max-width: 300px;
+}
 .gacha-img {
   width: 400px;
-}
-.btn-effect {
-  animation: grow 4s linear infinite;
-  /* animation: blow 4s linear infinite; */
-  border-radius: 50%;
 }
 .sunlight div {
   position: absolute;
@@ -191,9 +230,9 @@ body {
   left: 30px;
   width: 10px;
   height: 5px;
-  background: #00bbff;
+  background: #ef6ca8;
   border-radius: 100%;
-  animation: blow 4s linear infinite;
+  animation: blow 3s linear infinite;
 }
 
 .sunlight div:nth-child(1) {
@@ -253,11 +292,6 @@ body {
   100% {
     width: 5px;
   }
-}
-.push {
-  position: absolute;
-  transform: translate(50%, var(--capsul-y));
-  left: 50%;
 }
 
 @keyframes rotate {
@@ -339,5 +373,21 @@ body {
   100% {
     transform: translate(0%, 0%);
   }
+}
+.button-img {
+  width: 100%;
+  opacity: 0.5;
+}
+.selected {
+  opacity: 1;
+}
+.question {
+  background-image: url('/question.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 20px;
+  height: auto;
+  z-index: 2;
 }
 </style>

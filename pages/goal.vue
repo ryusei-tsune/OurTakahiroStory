@@ -19,15 +19,27 @@
       </div>
     </div>
     <div class="bg" :style="{ height: imgHeight }" />
-    <div class="text-white text-5xl m-auto justify-center flex destination">
-      {{ name }}
+    <div class="text-white text-center destination">
+      <div class="text-[#EF6CA8]" style="text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff">
+        {{ name }}
+      </div>
     </div>
     <div class="m-auto justify-center flex">
       <div class="capsule"></div>
     </div>
+    <nuxt-link to="/">
+      <div class="flex justify-center">
+        <div class="toTop"></div>
+      </div>
+      <div class="text-center text-white" style="position: relative; transform: translate(0, -60px)">Topへ</div>
+    </nuxt-link>
+    <div class="flex justify-center">
+      <Footer></Footer>
+    </div>
   </div>
 </template>
 <script>
+import Footer from '../components/Footer.vue'
 export default {
   head() {
     return {
@@ -35,7 +47,9 @@ export default {
     }
   },
   layout: 'default',
-  components: {},
+  components: {
+    Footer,
+  },
   middleware: [],
   data() {
     return {
@@ -66,27 +80,31 @@ export default {
 }
 </script>
 <style>
+html {
+  font-family: '游ゴシック体', YuGothic, '游ゴシック', 'Yu Gothic', sans-serif;
+  font-weight: bold;
+}
 body {
-  background-color: rgb(100, 170, 180);
+  background-color: #69b3b7;
 }
 </style>
 <style scoped>
 .destination {
   font-weight: bold;
+  font-size: 30px;
   animation: fade-in 2s 0s forwards;
 }
 @keyframes fade-in {
   0% {
     opacity: 0;
-    transform: scale(0) translate(0, 200%);
   }
   90% {
-    opacity: 0.1;
-    transform: scale(0.1) translate(0, 200%);
+    opacity: 0;
+    transform: scale(0.5) translate(0, 500%);
   }
   100% {
     opacity: 1;
-    transform: scale(1) translate(0, 200%);
+    transform: scale(1) translate(0, 75%);
   }
 }
 .bg {
@@ -99,10 +117,10 @@ body {
 
   width: 100vw;
   min-height: 100vh;
-  background-image: url('/confetti.png');
+  background-image: url('/paper.png');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: 100%;
   opacity: 1;
   -webkit-animation: anime 9s 0s 1;
   animation: anime 9s 0s 1;
@@ -127,7 +145,7 @@ body {
   }
 }
 .capsule {
-  transform: translate(0, 50%);
+  transform: translate(0, 10%);
   background-image: url('/capsule-open.png');
   background-size: 100%;
   background-repeat: no-repeat;
@@ -135,5 +153,14 @@ body {
   width: 100%;
   max-width: 500px;
   height: 300px;
+  z-index: -1;
+}
+.toTop {
+  background-image: url('/yellow.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100px;
+  height: 100px;
 }
 </style>
