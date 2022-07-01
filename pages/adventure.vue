@@ -109,12 +109,17 @@ export default {
   watch: {
     latitude: {
       handler: function (newVal, oldVal) {
-        console.log('change_position', newVal)
+        // console.log('change_position', newVal)
       },
     },
     longitude: {
       handler: function (newVal, oldVal) {
-        console.log('change_position', newVal)
+        // console.log('change_position', newVal)
+      },
+    },
+    distance_to_ckpt: {
+      handler: function (newVal, oldVal) {
+        // console.log('change_dis', newVal)
       },
     },
     coordinates: {
